@@ -54,8 +54,27 @@ let options = {
       },
       {
         test: /\.css$/,
-        loader: "style-loader!css-loader",
+        use: ["style-loader", "css-loader", "postcss-loader"],
         exclude: /node_modules/
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          {
+            loader: "css-loader",
+            // 官方说，css-loader 前面有几个 loader，就设置多少。默认值：0
+            // TODO 但我不设置，也没影响啊，不懂
+            options: {
+              importLoaders: 2
+            }
+          },
+          "postcss-loader",
+          // Compiles Sass to CSS
+          "sass-loader"
+        ]
       },
       {
         test: new RegExp(".(" + fileExtensions.join("|") + ")$"),

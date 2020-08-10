@@ -43,6 +43,13 @@ yarn add husky lint-staged -D
 ```shell
 yarn add @types/chrome -D
 ```
+```shell
+yarn add sass sass-loader -D
+```
+```shell
+yarn add postcss-loader autoprefixer -D
+# 配置文件为 postcss.config.js
+```
 html-loader 使 html 支持 webpack 别名
 html、css中需在别名前加波浪号~，不然解析失败（除了vue-loader有稍微讲到，webpack官网没找着。。。）
 
