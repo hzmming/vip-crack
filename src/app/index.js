@@ -25,9 +25,10 @@ export default () => {
     if (e.data.registerCrackPlugin) {
       // register
       const plugins = e.data.plugins;
-      for (let id in plugins) {
-        system.use(plugins[id]);
-      }
+      const pluginsName = Object.keys(plugins);
+      pluginsName.forEach(name => {
+        system.use(plugins[name]);
+      });
       // start
       system.start();
     }

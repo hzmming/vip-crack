@@ -8,10 +8,10 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icons/16.png",
-      "32": "icons/32.png",
-      "48": "icons/48.png",
-      "128": "icons/128.png"
+      "16": "icons/16-gray.png",
+      "32": "icons/32-gray.png",
+      "48": "icons/48-gray.png",
+      "128": "icons/128-gray.png"
     }
   },
   "icons": {

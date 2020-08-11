@@ -1,4 +1,5 @@
 import { hasOwnProperty, deferred } from "../util";
+import { isSuit } from "@/utils/helps";
 
 const LIFECYCLE_HOOKS = [
   "beforeGetVideoDom",
@@ -7,10 +8,6 @@ const LIFECYCLE_HOOKS = [
   "afterPlay",
   "playHistoryTime"
 ];
-
-const isSuit = pluginObj => {
-  return pluginObj.url && location.origin.includes(pluginObj.url);
-};
 
 class System {
   videoDefer = deferred();

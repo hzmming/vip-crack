@@ -2,23 +2,35 @@ const semver = require("semver");
 
 /**
  * 插件工具类。负责插件相关操作，包括保存插件信息、同步插件等
- * plugins数据结构定义为对象吧
- * plugins: {
- *  name: "plugin source code"
- * }
+ * plugins数据结构定义为数组
+ * plugins: [{
+ *  name,
+ *  url,
+ *  version,
+ *  network,
+ *  core
+ * }]
  */
 class PluginUtil {
   static get({ name } = {}) {
     return new Promise(resolve => {
-      chrome.storage.sync.get({ plugins: {} }, ({ plugins }) => {
-        const result = typeof name !== "undefined" ? plugins[name] : plugins;
+      chrome.storage.sync.get({ plugins: [] }, ({ plugins }) => {
+        const result =
+          typeof name !== "undefined"
+            ? plugins.find(i => i.name === name)
+            : plugins;
         resolve(result);
       });
     });
   }
   static async save(plugin) {
     const plugins = await PluginUtil.get();
-    plugins[plugin.name] = plugin;
+    const target = plugins.find(i => i.name === plugin.name);
+    if (target) {
+      Object.assign(target, plugin);
+    } else {
+      plugins.push(plugin);
+    }
     return new Promise(resolve => {
       chrome.storage.sync.set(
         {
