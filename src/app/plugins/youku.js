@@ -1,4 +1,5 @@
-import { getPrototype, hookApply } from "../util";
+import { getPrototype } from "@/utils/helps";
+import { hookApply } from "../util";
 
 const network = {
   injected: {

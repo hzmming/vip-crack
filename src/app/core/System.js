@@ -1,4 +1,4 @@
-import { hasOwnProperty, deferred } from "../util";
+import { hasOwnProperty, deferred } from "@/utils/helps";
 import { isSuit } from "@/utils/helps";
 
 const LIFECYCLE_HOOKS = [
