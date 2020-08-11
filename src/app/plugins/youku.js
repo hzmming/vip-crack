@@ -6,7 +6,7 @@ const network = {
       // 判断是否需要破解
       const necessaryCrack = !res.data.data.controller.buy_guide;
       resolveNecessary(necessaryCrack, {
-        referrer: necessaryCrack,
+        referrer: necessaryCrack
       });
       const user = res.data.data.user;
       user && (user.vip = true);
@@ -17,12 +17,12 @@ const network = {
       return res;
     },
     url: "acs.youku.com/h5/mtop.youku.play.ups.appinfo.get/1.1/",
-    type: "jsonp",
-  },
+    type: "jsonp"
+  }
 };
 
 const core = {
-  afterGetVideoDom(ctx) {
+  afterGetVideoDom() {
     // 这是一个思路，但有些情况未覆盖到，所以弃用
     /* hookPromise({
       catchHook(err) {
@@ -58,7 +58,9 @@ const core = {
     try {
       fixClickPlayNext();
       fixEndPlayNext();
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
 
     function fixClickPlayNext() {
       // 播放下一个视频按钮
@@ -86,10 +88,13 @@ const core = {
         nextBtnDom.click();
       };
     }
-  },
+  }
 };
 
 export default {
+  name: "youku",
+  url: "v.youku.com/v_show",
+  version: "0.0.1",
   network,
-  core,
+  core
 };

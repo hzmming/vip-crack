@@ -1,4 +1,5 @@
 import { isHlsType } from "../util";
+import Hls from "hls.js";
 
 class Video {
   /**

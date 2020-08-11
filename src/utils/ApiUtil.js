@@ -1,14 +1,14 @@
-import { uuid } from "../util";
+import { uuid } from "@/util/helps";
 
 /**
  * 接口类。负责解析接口相关操作，包括导入、导出、同步、新增、编辑、删除等
  */
-class Api {
+class ApiUtil {
   static import() {
     // 导入应该是用普通的 input type="file" 就行
   }
   static async export() {
-    const apiList = await Api.get();
+    const apiList = await ApiUtil.get();
     const result = JSON.stringify(apiList);
 
     // https://stackoverflow.com/questions/23160600/chrome-extension-local-storage-how-to-export
@@ -25,29 +25,29 @@ class Api {
   }
   static async create(item) {
     item.id = uuid();
-    const apiList = await Api.get();
+    const apiList = await ApiUtil.get();
     apiList.push(item);
-    return Api.saveAll(apiList);
+    return ApiUtil.saveAll(apiList);
   }
   static async update(item) {
-    const apiList = await Api.get();
+    const apiList = await ApiUtil.get();
     const target = apiList.find(i => i.id === item.id);
     if (target) {
       Object.assign(target, item);
-      return Api.saveAll(apiList);
+      return ApiUtil.saveAll(apiList);
     }
     return Promise.reject("没有该对象");
   }
   static async remove(item) {
-    let apiList = await Api.get();
+    let apiList = await ApiUtil.get();
     apiList = apiList.filter(i => i.id !== item.id);
-    return Api.saveAll(apiList);
+    return ApiUtil.saveAll(apiList);
   }
   static get({ id } = {}) {
     return new Promise(resolve => {
       chrome.storage.sync.get({ apiList: [] }, ({ apiList }) => {
         const result =
-          typeof id !== "undefined" ? apiList.find(i.id === id) : apiList;
+          typeof id !== "undefined" ? apiList.find(i => i.id === id) : apiList;
         resolve(result);
       });
     });
@@ -64,4 +64,4 @@ class Api {
   }
 }
 
-export default Api;
+export default ApiUtil;

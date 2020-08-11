@@ -1,17 +1,3 @@
-import pluginNameMap, { YOUKU, QQ, IQIYI } from "./core/constant";
-
-export function getActive() {
-  const origin = location.origin;
-  const web = origin.includes(YOUKU)
-    ? pluginNameMap[YOUKU]
-    : origin.includes(QQ)
-    ? pluginNameMap[QQ]
-    : origin.includes(IQIYI)
-    ? pluginNameMap[IQIYI]
-    : "";
-  return web;
-}
-
 export function getPrototype(obj) {
   return Object.prototype.toString.call(obj).slice(8, -1);
 }
@@ -72,8 +58,8 @@ export function hookPushState(hook) {
 
 export function filterDomEvt(dom, evtNames) {
   const filterEvtNames = [].concat(evtNames);
-  filterEvtNames.forEach((evtName) => {
-    dom.addEventListener(evtName, (e) => e.stopImmediatePropagation(), true);
+  filterEvtNames.forEach(evtName => {
+    dom.addEventListener(evtName, e => e.stopImmediatePropagation(), true);
   });
 }
 
@@ -134,12 +120,15 @@ export function hookPromise(opt = {}) {
  */
 export function queryStringify(data) {
   const keyValues = [];
-  Object.keys(data).forEach((key) => {
+  Object.keys(data).forEach(key => {
     keyValues.push(`${key}=${data[key]}`);
   });
   return keyValues.join("&");
 }
 
-export function uuid() {
-  return performance.now().toString();
+export function wrapperInstaller(pluginObj) {
+  (install => {
+    install(pluginObj);
+    // eslint-disable-next-line no-undef
+  })(VIP_CRACK_INSTALL);
 }

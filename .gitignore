@@ -1,3 +1,5 @@
 node_modules
-build
+# 要包含目录下的某个子目录，不能屏蔽到一级目录，要用/*指明到二级目录
+build/*
+!build/plugins
 secrets.*.js

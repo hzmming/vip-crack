@@ -8,20 +8,20 @@ function Notice(options = {}) {
   const params = {
     type: "basic",
     iconUrl: "images/fail.jpg", // 简单地贴个失败图片
-    title: "",
+    title: ""
   };
   params.message = options.message;
   chrome.runtime.sendMessage({
     isNotice: true,
-    params,
+    params
   });
 }
 
-["success", "warning", "info", "error"].forEach((type) => {
-  Notice[type] = (options) => {
+["success", "warning", "info", "error"].forEach(type => {
+  Notice[type] = options => {
     if (typeof options === "string") {
       options = {
-        message: options,
+        message: options
       };
     }
     options.type = type;

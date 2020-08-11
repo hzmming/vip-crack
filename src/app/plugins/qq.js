@@ -1,17 +1,22 @@
-import { hackCreateElement, filterDomEvt, hookPushState } from "../util";
+import {
+  hackCreateElement,
+  filterDomEvt,
+  hookPushState,
+  wrapperInstaller
+} from "../util";
 
 const network = {
   // 在 chrome extension 的 background.js 运行。支持 Object 或 Array
   background: {
     handler(chrome, { tabId }) {
       chrome.tabs.sendMessage(tabId, {
-        playHistoryTime: true,
+        playHistoryTime: true
       });
     },
     // 支持 String 或 Array
     url: "node.video.qq.com/x/api/specify_history",
     // 支持：equal, include。默认值为：include
-    operator: "include",
+    operator: "include"
   },
   // 在 浏览器客户端 运行。支持 Object 或 Array
   injected: {
@@ -47,17 +52,17 @@ const network = {
     // 支持：equal, include。默认值为：include
     operator: "include",
     // 支持：ajax, jsonp。默认值为：ajax
-    type: "ajax",
-  },
+    type: "ajax"
+  }
 };
 
 const core = {
-  init(ctx) {
+  init() {
     hookPushState(() => {
       window.postMessage({ updateSrc: true }, "*");
     });
   },
-  beforeGetVideoDom(ctx) {},
+  beforeGetVideoDom() {},
   getVideoDom(ctx, { resolve }) {
     const done = hackCreateElement((...args) => {
       if (args[0].toLowerCase() !== "video") return;
@@ -78,16 +83,25 @@ const core = {
       const time = clickTipsDom.innerText;
       const [hour = 0, minute = 0, second = 0] = Array(3)
         .concat(time.split(":"))
-        .map((i) => parseInt(i))
+        .map(i => parseInt(i))
         .splice(-3);
       videoDom.currentTime = hour * 60 * 60 + minute * 60 + second;
       videoDom.play();
     }, 800);
     return;
-  },
+  }
 };
 
-export default {
+/**
+ * 因为脚本是动态远程获取的，没办法像本地一样import并使用，所以在window上挂载了全局变量，采用了自注册的方式
+ */
+wrapperInstaller({
+  // 插件名称
+  name: "qq",
+  // 指定网站使用插件
+  url: "v.qq.com/x/cover",
+  // 版本号
+  version: "0.0.1",
   network,
-  core,
-};
+  core
+});

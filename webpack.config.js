@@ -34,16 +34,27 @@ if (fs.existsSync(secretsPath)) {
   alias["secrets"] = secretsPath;
 }
 
+// 扩展插件单独打包
+const pluginsPath = resolve("src", "app/plugins");
+const pluginsEntry = {};
+fs.readdirSync(pluginsPath).forEach(pluginName => {
+  pluginsEntry["plugins/" + pluginName.replace(/\.js$/, "")] =
+    pluginsPath + "/" + pluginName;
+});
+
 let options = {
   mode: process.env.NODE_ENV || "development",
   entry: {
     popup: resolve("src", "popup/popup.js"),
     options: resolve("src", "options/options.js"),
-    background: resolve("src", "background.js")
+    background: resolve("src", "background.js"),
+    injects: resolve("src", "injects.js"),
+    content: resolve("src", "content.js"),
+    ...pluginsEntry
   },
   output: {
     path: resolve("build"),
-    filename: "[name].bundle.js"
+    filename: "[name].js"
   },
   module: {
     rules: [
@@ -97,8 +108,6 @@ let options = {
   plugins: [
     // clean the build folder
     new CleanWebpackPlugin(),
-    // expose and write the allowed env vars on the compiled bundle
-    new webpack.EnvironmentPlugin(["NODE_ENV"]),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -115,7 +124,8 @@ let options = {
           }
         },
         { from: "src/assets", to: "assets" },
-        { from: "src/icons", to: "icons" }
+        { from: "src/icons", to: "icons" },
+        { from: "src/config.json", to: "config.json" }
       ]
     }),
     new HtmlWebpackPlugin({

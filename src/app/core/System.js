@@ -8,6 +8,10 @@ const LIFECYCLE_HOOKS = [
   "playHistoryTime"
 ];
 
+const isSuit = pluginObj => {
+  return pluginObj.url && location.origin.includes(pluginObj.url);
+};
+
 class System {
   videoDefer = deferred();
   sourceInfoDefer = deferred();
@@ -29,7 +33,10 @@ class System {
       this.hooks[name] = {};
     });
   }
-  use(plugin) {
+  use(pluginObj) {
+    // 判断插件是否适用当前网站
+    if (!isSuit(pluginObj)) return;
+    const plugin = pluginObj.core;
     for (let key in plugin) {
       if (hasOwnProperty(plugin, key)) {
         this.hooks[key] && this.hooks[key].push(plugin[key]);
