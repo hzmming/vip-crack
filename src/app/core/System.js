@@ -1,5 +1,7 @@
 import { hasOwnProperty, deferred } from "@/utils/helps";
 import { isSuit } from "@/utils/helps";
+import { proxy } from "ajax-hook";
+import JSONPHook from "@/vendor/JSONPHook";
 
 const LIFECYCLE_HOOKS = [
   "beforeGetVideoDom",
@@ -8,6 +10,27 @@ const LIFECYCLE_HOOKS = [
   "afterPlay",
   "playHistoryTime"
 ];
+
+const createNoReferrerMeta = () => {
+  const meta = document.createElement("meta");
+  meta.name = "referrer";
+  meta.content = "no-referrer";
+  return meta;
+};
+
+let noReferrerMeta = createNoReferrerMeta();
+
+/**
+ * 禁用Referrer
+ * QUESTION 不知道会不会影响
+ */
+const disableReferrer = () => {
+  document.head.appendChild(noReferrerMeta);
+};
+
+const recoverReferrer = () => {
+  noReferrerMeta.remove();
+};
 
 class System {
   videoDefer = deferred();
@@ -39,6 +62,8 @@ class System {
         this.hooks[key] && this.hooks[key].push(plugin[key]);
       }
     }
+    // 拦截请求
+    this.hookNetwork(pluginObj.network);
   }
   emit(key, options) {
     const fns = this.hooks[key];
@@ -51,6 +76,46 @@ class System {
     await this.ready;
     this.video.updateAndPlay();
     this.emit("afterPlay");
+  }
+  hookNetwork(network = {}) {
+    const { injected } = network;
+    if (!injected) return;
+    const array = [].concat(injected);
+    const resolveNecessary = (necessaryCrack, options) => {
+      window.postMessage({ necessaryCrack }, "*");
+      options.referrer ? disableReferrer() : recoverReferrer();
+    };
+    array.forEach(i => {
+      if (i.type === "ajax") {
+        proxy({
+          //请求成功后进入
+          onResponse: (response, handler) => {
+            const url = response.config.url;
+            const matchList = [].concat(i.url);
+            const isMatch = matchList.some(match => {
+              if (i.operator === "equal") {
+                return url === match;
+              }
+              // 默认 include
+              return url.includes(match);
+            });
+            isMatch && i.handler(response, resolveNecessary);
+            handler.next(response);
+          }
+        });
+      } else if (i.type === "jsonp") {
+        const matchList = [].concat(i.url);
+        JSONPHook(
+          matchList,
+          response => {
+            i.handler(response, resolveNecessary);
+            // TODO 采用类似 ajaxhook 的 handler.next(response) 重构
+            return response;
+          },
+          "callback"
+        );
+      }
+    });
   }
   getVideoDom() {
     return this.video.getDom();

@@ -8,15 +8,14 @@ import {
 const network = {
   // 在 chrome extension 的 background.js 运行。支持 Object 或 Array
   background: {
-    handler(chrome, { tabId }) {
-      chrome.tabs.sendMessage(tabId, {
-        playHistoryTime: true
-      });
-    },
     // 支持 String 或 Array
     url: "node.video.qq.com/x/api/specify_history",
     // 支持：equal, include。默认值为：include
-    operator: "include"
+    operator: "include",
+    // 请求结束后，发送消息。强制 Object
+    message: {
+      playHistoryTime: true
+    }
   },
   // 在 浏览器客户端 运行。支持 Object 或 Array
   injected: {
@@ -98,8 +97,8 @@ const core = {
 wrapperInstaller({
   // 插件名称
   name: "qq",
-  // 指定网站使用插件
-  url: "v.qq.com/x/cover",
+  // 指定网站使用插件，强制只到一级域名：其实qq的全url是 v.qq.com/x/cover，但咱们只要写到qq这级即可
+  url: "qq.com/x/cover",
   // 版本号
   version: "0.0.1",
   network,

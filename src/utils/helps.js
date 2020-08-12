@@ -52,3 +52,14 @@ export function queryStringify(data) {
   });
   return keyValues.join("&");
 }
+
+/**
+ * 获取给定url的域名
+ */
+export function getHostname(url) {
+  // 若不存在前缀，默认填充 http://
+  let prefix = "http://";
+  if (/^https?:\/\//.test(url)) prefix = "";
+  const { hostname } = new URL(prefix + url);
+  return hostname;
+}
