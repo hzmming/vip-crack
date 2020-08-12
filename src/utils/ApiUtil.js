@@ -1,4 +1,5 @@
 import { uuid } from "@/util/helps";
+import config from "@/config.json";
 
 /**
  * 接口类。负责解析接口相关操作，包括导入、导出、同步、新增、编辑、删除等
@@ -16,15 +17,32 @@ class ApiUtil {
     const url = "data:," + result;
     chrome.downloads.download({
       url: url,
-      filename: "api_list.txt"
+      filename: "apiList.txt"
     });
   }
   static sync() {
     // 查看仓库代码是否更新
     // 若更新，则同步
+    return new Promise(resolve => {
+      const { apiListPath } = config;
+      fetch(apiListPath)
+        .then(res => res.json())
+        .then(async ({ list }) => {
+          // 添加唯一id
+          list.forEach(i => (i.id = uuid()));
+          const apiList = await ApiUtil.get();
+          const manualList = apiList.filter(i => i.manual);
+          // 保留用户手动添加的
+          const mergeList = list.concat(manualList);
+          await ApiUtil.saveAll(mergeList);
+          resolve(true);
+        });
+    });
   }
   static async create(item) {
     item.id = uuid();
+    // 用户手动添加的
+    item.manual = true;
     const apiList = await ApiUtil.get();
     apiList.push(item);
     return ApiUtil.saveAll(apiList);

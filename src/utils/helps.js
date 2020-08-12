@@ -1,5 +1,7 @@
+import { v4 } from "uuid";
+
 export function uuid() {
-  return performance.now().toString();
+  return v4();
 }
 
 const isSuit = pluginObj => {

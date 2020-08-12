@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 const webpack = require("webpack"),
   path = require("path"),
   fs = require("fs"),
@@ -124,8 +125,9 @@ let options = {
           }
         },
         { from: "src/assets", to: "assets" },
-        { from: "src/icons", to: "icons" },
-        { from: "src/config.json", to: "config.json" }
+        { from: "src/icons", to: "icons" }
+        // 配置就不做动态获取了，省点事
+        // { from: "src/config.json", to: "config.json" }
       ]
     }),
     new HtmlWebpackPlugin({

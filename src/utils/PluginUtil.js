@@ -1,4 +1,5 @@
 const semver = require("semver");
+const config = require("@/config.json");
 
 /**
  * 插件工具类。负责插件相关操作，包括保存插件信息、同步插件等
@@ -42,21 +43,18 @@ class PluginUtil {
   }
   static sync() {
     return new Promise(resolve => {
-      chrome.storage.sync.get({ config: {} }, async ({ config }) => {
-        const pluginsPath = config.pluginsPath;
-        const wait = [];
-        pluginsPath.forEach(path => {
-          let finalPath = path;
-          if (process.env.NODE_ENV === "development") {
-            finalPath = chrome.extension.getURL(
-              "plugins/" + path.split("/").pop()
-            );
-          }
-          wait.push(fetchAndSave(finalPath));
-        });
-        await Promise.all(wait);
-        resolve(true);
+      const pluginsPath = config.pluginsPath;
+      const wait = [];
+      pluginsPath.forEach(path => {
+        let finalPath = path;
+        if (process.env.NODE_ENV === "development") {
+          finalPath = chrome.extension.getURL(
+            "plugins/" + path.split("/").pop()
+          );
+        }
+        wait.push(fetchAndSave(finalPath));
       });
+      Promise.all(wait).then(() => resolve(true));
     });
   }
 }

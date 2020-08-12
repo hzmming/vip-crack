@@ -88,6 +88,10 @@ yarn add lodash.pick
 yarn add semver
 ```
 
+```shell
+yarn add uuid
+```
+
 html-loader 使 html 支持 webpack 别名
 html、css 中需在别名前加波浪号~，不然解析失败（除了 vue-loader 有稍微讲到，webpack 官网没找着。。。）
 

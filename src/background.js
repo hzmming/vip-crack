@@ -1,5 +1,6 @@
 import PluginUtil from "@/utils/PluginUtil";
 import { getHostname } from "@/utils/helps";
+import ApiUtil from "./utils/ApiUtil";
 
 const dispatchObj = {};
 
@@ -47,10 +48,11 @@ dispatchObj["isNotice"] = request => {
 };
 
 /**
+ * 同步插件和Api列表
  * 一天至少一次请求获取
  * TODO 多久更新应支持配置
  */
-const syncPlugins = () => {
+const sync = () => {
   chrome.storage.local.get(
     { lastUpdatedTime: null },
     async ({ lastUpdatedTime }) => {
@@ -64,24 +66,22 @@ const syncPlugins = () => {
         if (currentInterval < 0) {
           // 定时，时间到了，就更新
           setTimeout(async () => {
-            const result = await PluginUtil.sync();
-            result &&
-              chrome.storage.local.set({
-                lastUpdatedTime
-              });
+            await Promise.all([PluginUtil.sync(), ApiUtil.sync()]);
+            chrome.storage.local.set({
+              lastUpdatedTime
+            });
           }, Math.abs(currentInterval));
           return;
         }
       }
-      const result = await PluginUtil.sync();
-      result &&
-        chrome.storage.local.set({
-          currentTime
-        });
+      await Promise.all([PluginUtil.sync(), ApiUtil.sync()]);
+      chrome.storage.local.set({
+        lastUpdatedTime: currentTime
+      });
     }
   );
 };
-syncPlugins();
+sync();
 
 /**
  * 网络请求拦截
