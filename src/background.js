@@ -33,6 +33,59 @@ dispatchObj["enableVipCrack"] = (request, sender) => {
   });
 };
 
+/**
+ * 发送notice消息
+ */
+dispatchObj["isNotice"] = request => {
+  const { type, iconUrl, title, message } = request.params;
+  chrome.notifications.create(null, {
+    type,
+    iconUrl,
+    title,
+    message
+  });
+};
+
+/**
+ * 一天至少一次请求获取
+ * TODO 多久更新应支持配置
+ */
+const syncPlugins = () => {
+  chrome.storage.local.get(
+    { lastUpdatedTime: null },
+    async ({ lastUpdatedTime }) => {
+      const currentTime = new Date().getTime();
+      if (lastUpdatedTime) {
+        // 判断相隔是否超过一天，超过则更新
+        const interval = currentTime - lastUpdatedTime;
+        // 需要更新的间隔时间（单位：ms）
+        const needToUpdateInterval = 1 * 24 * 60 * 60 * 1000;
+        const currentInterval = interval - needToUpdateInterval;
+        if (currentInterval < 0) {
+          // 定时，时间到了，就更新
+          setTimeout(async () => {
+            const result = await PluginUtil.sync();
+            result &&
+              chrome.storage.local.set({
+                lastUpdatedTime
+              });
+          }, Math.abs(currentInterval));
+          return;
+        }
+      }
+      const result = await PluginUtil.sync();
+      result &&
+        chrome.storage.local.set({
+          currentTime
+        });
+    }
+  );
+};
+syncPlugins();
+
+/**
+ * 网络请求拦截
+ */
 PluginUtil.get().then(plugins => {
   plugins.forEach(plugin => {
     const background = plugin?.network?.background;

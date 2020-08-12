@@ -35,7 +35,7 @@ const main = () => {
     const activePlugins = getActivePlugins(plugins);
     if (activePlugins.length) {
       // 2. 点亮图标
-      chrome.runtime.sendMessage({ enableVipCrack: true });
+      chrome.runtime.sendMessage({ operate: "enableVipCrack" });
       // 3. 启动破解
       window.postMessage(
         { registerCrackPlugin: true, plugins: activePlugins },

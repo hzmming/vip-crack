@@ -41,16 +41,21 @@ class PluginUtil {
     });
   }
   static sync() {
-    chrome.storage.sync.get({ config: {} }, ({ config }) => {
-      const pluginsPath = config.pluginsPath;
-      pluginsPath.forEach(async path => {
-        let finalPath = path;
-        if (process.env.NODE_ENV === "development") {
-          finalPath = chrome.extension.getURL(
-            "plugins/" + path.split("/").pop()
-          );
-        }
-        await fetchAndSave(finalPath);
+    return new Promise(resolve => {
+      chrome.storage.sync.get({ config: {} }, async ({ config }) => {
+        const pluginsPath = config.pluginsPath;
+        const wait = [];
+        pluginsPath.forEach(path => {
+          let finalPath = path;
+          if (process.env.NODE_ENV === "development") {
+            finalPath = chrome.extension.getURL(
+              "plugins/" + path.split("/").pop()
+            );
+          }
+          wait.push(fetchAndSave(finalPath));
+        });
+        await Promise.all(wait);
+        resolve(true);
       });
     });
   }

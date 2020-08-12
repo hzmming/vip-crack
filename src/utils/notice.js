@@ -12,7 +12,7 @@ function Notice(options = {}) {
   };
   params.message = options.message;
   chrome.runtime.sendMessage({
-    isNotice: true,
+    operate: "isNotice",
     params
   });
 }
