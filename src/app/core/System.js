@@ -75,6 +75,8 @@ class System {
     this.emit("getVideoDom", { resolve: this.resolveVideoDom.bind(this) });
     await this.ready;
     this.video.updateAndPlay();
+    // 重置是否需要破解标志，为不刷新页面切换集数准备
+    this.necessaryDefer = deferred();
     this.emit("afterPlay");
   }
   hookNetwork(network = {}) {

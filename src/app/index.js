@@ -12,8 +12,10 @@ export default () => {
     window.addEventListener(
       "message",
       function (e) {
-        const fn = dispatchObj[e.data.operate];
-        fn && fn(e);
+        if (typeof e.data.operate !== "undefined") {
+          const fn = dispatchObj[e.data.operate];
+          fn && fn(e);
+        }
       },
       false
     );
@@ -36,14 +38,14 @@ export default () => {
 
   // 获取源视频信息
   dispatchObj.sourceInfo = function (e) {
-    if (e.data.crack && e.data.success) {
+    if (e.data.success) {
       system.resolveSourceInfo(e.data);
     }
   };
 
   // 不刷新页面下，切换集数
-  dispatchObj.updateSrc = function (e) {
-    if (e.data.updateSrc) {
+  dispatchObj.resolveSourceInfo = function (e) {
+    if (e.data.resolveSourceInfo) {
       return video.blockPlay();
     }
   };

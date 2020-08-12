@@ -45,14 +45,15 @@ class PluginUtil {
     return new Promise(resolve => {
       const pluginsPath = config.pluginsPath;
       const wait = [];
-      pluginsPath.forEach(path => {
+      pluginsPath.forEach(async path => {
         let finalPath = path;
         if (process.env.NODE_ENV === "development") {
           finalPath = chrome.extension.getURL(
             "plugins/" + path.split("/").pop()
           );
         }
-        wait.push(fetchAndSave(finalPath));
+        // 此处await只是保证了生产promise，并不保证forEach循环之间的await顺序
+        wait.push(await fetchAndSave(finalPath));
       });
       Promise.all(wait).then(() => resolve(true));
     });

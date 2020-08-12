@@ -1,6 +1,7 @@
 import PluginUtil from "@/utils/PluginUtil";
 import { getHostname } from "@/utils/helps";
 import ApiUtil from "./utils/ApiUtil";
+import Config from "./utils/Config";
 
 const dispatchObj = {};
 
@@ -74,10 +75,26 @@ const sync = () => {
           return;
         }
       }
-      await Promise.all([PluginUtil.sync(), ApiUtil.sync()]);
+      const [, apiList] = await Promise.all([
+        PluginUtil.sync(),
+        ApiUtil.sync()
+      ]);
       chrome.storage.local.set({
         lastUpdatedTime: currentTime
       });
+      // 如果是第一次，默认开启并使用第一个源
+      const config = await Config.get();
+      if (typeof config.enable === "undefined") {
+        config.enable = true;
+        config.selectedSource = apiList[0];
+        Config.setObj(config);
+      } else {
+        const api = apiList.find(i => i.id === config.selectedSource);
+        if (!api) {
+          // api 不存在说明使用的源被删掉了，默认选中第一个源
+          Config.set("selectedSource", apiList[0].id);
+        }
+      }
     }
   );
 };

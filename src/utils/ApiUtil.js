@@ -34,8 +34,8 @@ class ApiUtil {
           const manualList = apiList.filter(i => i.manual);
           // 保留用户手动添加的
           const mergeList = list.concat(manualList);
-          await ApiUtil.saveAll(mergeList);
-          resolve(true);
+          await ApiUtil.override(mergeList);
+          resolve(mergeList);
         });
     });
   }
@@ -45,21 +45,21 @@ class ApiUtil {
     item.manual = true;
     const apiList = await ApiUtil.get();
     apiList.push(item);
-    return ApiUtil.saveAll(apiList);
+    return ApiUtil.override(apiList);
   }
   static async update(item) {
     const apiList = await ApiUtil.get();
     const target = apiList.find(i => i.id === item.id);
     if (target) {
       Object.assign(target, item);
-      return ApiUtil.saveAll(apiList);
+      return ApiUtil.override(apiList);
     }
     return Promise.reject("没有该对象");
   }
   static async remove(item) {
     let apiList = await ApiUtil.get();
     apiList = apiList.filter(i => i.id !== item.id);
-    return ApiUtil.saveAll(apiList);
+    return ApiUtil.override(apiList);
   }
   static get({ id } = {}) {
     return new Promise(resolve => {
@@ -70,7 +70,7 @@ class ApiUtil {
       });
     });
   }
-  static async saveAll(apiList) {
+  static async override(apiList) {
     return new Promise(resolve => {
       chrome.storage.sync.set(
         {

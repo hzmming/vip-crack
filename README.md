@@ -32,6 +32,8 @@
 插件动态获取，是为了避免视频网站的更新而造成的 chrome 扩展频繁更新
 插件目录位置等动态信息最好再写个配置文件 config.js。先获取配置文件内容，再获取插件内容
 
+使用 jsdelivr 避开 raw.githubusercontent.com 域名国内被墙的问题
+
 **生命周期**：getVideoDom - afterGetVideoDom - updateVideo - afterUpdateVideo - play
 
 ### webpack 工程化

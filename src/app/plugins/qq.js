@@ -14,7 +14,7 @@ const network = {
     operator: "include",
     // 请求结束后，发送消息。强制 Object
     message: {
-      playHistoryTime: true
+      operate: "playHistoryTime"
     }
   },
   // 在 浏览器客户端 运行。支持 Object 或 Array
@@ -58,7 +58,7 @@ const network = {
 const core = {
   init() {
     hookPushState(() => {
-      window.postMessage({ updateSrc: true }, "*");
+      window.postMessage({ resolveSourceInfo: true }, "*");
     });
   },
   beforeGetVideoDom() {},

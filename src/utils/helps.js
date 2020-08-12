@@ -55,6 +55,23 @@ export function queryStringify(data) {
   return keyValues.join("&");
 }
 
+export function generateRequestParams(
+  videoUrl,
+  { url, method, param, headers }
+) {
+  const isPost = method === "POST";
+  const keyParam = queryStringify({ [param]: videoUrl });
+  const options = {
+    url: url + (isPost ? "" : `?${keyParam}`),
+    options: {
+      method: method || "GET",
+      headers: headers || {},
+      body: isPost ? keyParam : null
+    }
+  };
+  return options;
+}
+
 /**
  * 获取给定url的域名
  */
