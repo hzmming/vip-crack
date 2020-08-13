@@ -1,5 +1,5 @@
 import PluginUtil from "@/utils/PluginUtil";
-import { getHostname } from "@/utils/helps";
+import { getHostname, convertSourceObj } from "@/utils/helps";
 import ApiUtil from "./utils/ApiUtil";
 import Config from "./utils/Config";
 
@@ -63,7 +63,9 @@ dispatchObj["isRequest"] = async (request, sender, sendResponse) => {
  */
 const proxyNetwork = () => {
   PluginUtil.get().then(plugins => {
-    plugins.forEach(plugin => {
+    plugins.forEach(item => {
+      // 需要用到 plugin 里的 function，需自行调用 convertSourceObj
+      const plugin = convertSourceObj(item.sourceCode);
       const background = plugin?.network?.background;
       if (!background) return;
       const hostname = getHostname(plugin.url);

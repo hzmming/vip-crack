@@ -82,3 +82,16 @@ export function getHostname(url) {
   const { hostname } = new URL(prefix + url);
   return hostname;
 }
+
+/**
+ * 返回原始插件数据。包括function
+ */
+export function convertSourceObj(sourceCode) {
+  let originPlugin = null;
+  // eslint-disable-next-line no-unused-vars
+  const VIP_CRACK_INSTALL = obj => {
+    originPlugin = obj;
+  };
+  eval(sourceCode);
+  return originPlugin;
+}

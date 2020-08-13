@@ -1,5 +1,7 @@
+import { convertSourceObj } from "@/utils/helps";
 const semver = require("semver");
 const config = require("@/config.json");
+const pick = require("lodash.pick");
 
 /**
  * 插件工具类。负责插件相关操作，包括保存插件信息、同步插件等
@@ -15,12 +17,11 @@ const config = require("@/config.json");
 class PluginUtil {
   static get({ name } = {}) {
     return new Promise(resolve => {
-      chrome.storage.sync.get({ plugins: "" }, ({ plugins }) => {
-        const pluginList = plugins ? JSON.parse(plugins) : [];
+      chrome.storage.local.get({ plugins: [] }, ({ plugins }) => {
         const result =
           typeof name !== "undefined"
-            ? pluginList.find(i => i.name === name)
-            : pluginList;
+            ? plugins.find(i => i.name === name)
+            : plugins;
         resolve(result);
       });
     });
@@ -34,9 +35,9 @@ class PluginUtil {
       plugins.push(plugin);
     }
     return new Promise(resolve => {
-      chrome.storage.sync.set(
+      chrome.storage.local.set(
         {
-          plugins: JSON.stringify(plugins)
+          plugins: plugins
         },
         () => resolve(true)
       );
@@ -65,17 +66,18 @@ function fetchAndSave(path) {
   return new Promise(resolve => {
     fetch(path)
       .then(res => res.text())
-      .then(sourceCode => {
-        // eslint-disable-next-line no-unused-vars
-        const VIP_CRACK_INSTALL = async pluginObj => {
-          const plugin = await PluginUtil.get({ name: pluginObj.name });
-          // 不是第一次，判断版本是否更新
-          if (plugin && !semver.gt(pluginObj.version, plugin.version)) return;
-          // 保存
-          await PluginUtil.save(pluginObj);
-          resolve(true);
+      .then(async sourceCode => {
+        const pluginObj = convertSourceObj(sourceCode);
+        const plugin = await PluginUtil.get({ name: pluginObj.name });
+        // 不是第一次，判断版本是否更新
+        if (plugin && !semver.gt(pluginObj.version, plugin.version)) return;
+        // 保存
+        const wrapper = {
+          ...pick(pluginObj, ["name", "url", "version"]),
+          sourceCode
         };
-        eval(sourceCode);
+        await PluginUtil.save(wrapper);
+        resolve(true);
       });
   });
 }

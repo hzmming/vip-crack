@@ -1,5 +1,6 @@
 import System from "./core/System";
 import Video from "./core/Video";
+import { convertSourceObj } from "@/utils/helps";
 
 const video = new Video();
 const system = new System(video);
@@ -25,7 +26,10 @@ listen();
 dispatchObj.registerCrackPlugin = function (e) {
   // register
   const plugins = e.data.plugins;
-  plugins.forEach(plugin => system.use(plugin));
+  plugins.forEach(item => {
+    const plugin = convertSourceObj(item.sourceCode);
+    return system.use(plugin);
+  });
   // start
   system.start();
 };
