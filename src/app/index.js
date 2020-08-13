@@ -1,69 +1,57 @@
 import System from "./core/System";
 import Video from "./core/Video";
 
-export default () => {
-  const video = new Video();
-  const system = new System(video);
+const video = new Video();
+const system = new System(video);
 
-  // 也不一定非得用 eventemitter 吧，毕竟我只想要派发，又不需要移除事件
-  const dispatchObj = {};
+// 也不一定非得用 eventemitter 吧，毕竟我只想要派发，又不需要移除事件
+const dispatchObj = {};
 
-  const listen = () => {
-    window.addEventListener(
-      "message",
-      function (e) {
-        if (typeof e.data.operate !== "undefined") {
-          const fn = dispatchObj[e.data.operate];
-          fn && fn(e);
-        }
-      },
-      false
-    );
-  };
-  listen();
-
-  // 注册并启动脚本
-  dispatchObj.register = function (e) {
-    if (e.data.registerCrackPlugin) {
-      // register
-      const plugins = e.data.plugins;
-      const pluginsName = Object.keys(plugins);
-      pluginsName.forEach(name => {
-        system.use(plugins[name]);
-      });
-      // start
-      system.start();
-    }
-  };
-
-  // 获取源视频信息
-  dispatchObj.sourceInfo = function (e) {
-    if (e.data.success) {
-      system.resolveSourceInfo(e.data);
-    }
-  };
-
-  // 不刷新页面下，切换集数
-  dispatchObj.resolveSourceInfo = function (e) {
-    if (e.data.resolveSourceInfo) {
-      return video.blockPlay();
-    }
-  };
-  // 是否需要破解
-  dispatchObj.necessaryCrack = function (e) {
-    if (typeof e.data.necessaryCrack !== "undefined") {
-      if (e.data.necessaryCrack) {
-        system.resolveNecessary();
-      } else {
-        video.recoverPlay();
-        console.log("非vip视频，正常播放");
+const listen = () => {
+  window.addEventListener(
+    "message",
+    function (e) {
+      if (typeof e.data.operate !== "undefined") {
+        const fn = dispatchObj[e.data.operate];
+        fn && fn(e);
       }
-      return;
-    }
-  };
-  // 播放历史记录
-  dispatchObj.playHistoryTime = function (e) {
-    if (!e.data.playHistoryTime) return;
-    system.emit("playHistoryTime");
-  };
+    },
+    false
+  );
+};
+listen();
+
+// 注册并启动脚本
+dispatchObj.registerCrackPlugin = function (e) {
+  // register
+  const plugins = e.data.plugins;
+  plugins.forEach(plugin => system.use(plugin));
+  // start
+  system.start();
+};
+
+// 获取源视频信息
+dispatchObj.sourceInfo = function (e) {
+  if (e.data.success) {
+    system.resolveSourceInfo(e.data);
+  }
+};
+
+// 不刷新页面下，切换集数
+dispatchObj.resolveSourceInfo = function () {
+  return video.blockPlay();
+};
+// 是否需要破解
+dispatchObj.necessaryCrack = function (e) {
+  if (e.data.necessaryCrack) {
+    system.resolveNecessary();
+  } else {
+    video.recoverPlay();
+    console.log("非vip视频，正常播放");
+  }
+};
+// 播放历史记录
+dispatchObj.playHistoryTime = function (e) {
+  if (!e.data.playHistoryTime) return;
+  system.emit("playHistoryTime");
 };

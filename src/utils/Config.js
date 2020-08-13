@@ -3,12 +3,12 @@
  * 数据格式为
  * config: {
  *  enable: true,
- *  selectedSource: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
+ *  selectedSourceId: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d",
  *  ...
  * }
  */
 class Config {
-  static get({ key } = {}) {
+  static get(key) {
     return new Promise(resolve => {
       chrome.storage.sync.get({ config: {} }, ({ config }) => {
         const result = typeof key !== "undefined" ? config[key] : config;

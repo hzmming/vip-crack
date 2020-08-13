@@ -4,6 +4,7 @@ import { proxy } from "ajax-hook";
 import * as JSONPHook from "@/vendor/JSONPHook";
 
 const LIFECYCLE_HOOKS = [
+  "init",
   "beforeGetVideoDom",
   "getVideoDom",
   "afterGetVideoDom",
@@ -50,7 +51,7 @@ class System {
   }
   initHooks() {
     LIFECYCLE_HOOKS.forEach(name => {
-      this.hooks[name] = {};
+      this.hooks[name] = [];
     });
   }
   use(pluginObj) {
@@ -84,7 +85,7 @@ class System {
     if (!injected) return;
     const array = [].concat(injected);
     const resolveNecessary = (necessaryCrack, options) => {
-      window.postMessage({ necessaryCrack }, "*");
+      window.postMessage({ operate: "necessaryCrack", necessaryCrack }, "*");
       options.referrer ? disableReferrer() : recoverReferrer();
     };
     array.forEach(i => {

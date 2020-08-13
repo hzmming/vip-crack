@@ -46,10 +46,13 @@ const main = () => {
       // 2. 点亮图标
       chrome.runtime.sendMessage({ operate: "enableVipCrack" });
       // 3. 启动破解
-      window.postMessage(
-        { registerCrackPlugin: true, plugins: activePlugins },
-        "*"
-      );
+      setTimeout(() => {
+        // TODO utils/execute.js 的问题不解决，这里只能先延迟了，不然监听事件的 app/index.js 还没执行啊。。。
+        window.postMessage(
+          { operate: "registerCrackPlugin", plugins: activePlugins },
+          "*"
+        );
+      }, 200);
       // 4. 消息处理
       // injected消息
       listenBrowser();
@@ -86,6 +89,12 @@ async function resolveSourceInfo(immediate) {
   const api = await getActiveApi();
   const { url, options } = generateRequestParams(videoUrl, api);
   const res = await crossRequest(url, options);
+
+  if (!res) {
+    return necessaryDefer.then(() =>
+      notice.error("接口挂了，请重新刷新页面。若还是不行，请更换接口")
+    );
+  }
 
   if (!res.success) {
     return necessaryDefer.then(() =>

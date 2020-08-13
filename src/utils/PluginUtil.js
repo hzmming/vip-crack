@@ -15,11 +15,12 @@ const config = require("@/config.json");
 class PluginUtil {
   static get({ name } = {}) {
     return new Promise(resolve => {
-      chrome.storage.sync.get({ plugins: [] }, ({ plugins }) => {
+      chrome.storage.sync.get({ plugins: "" }, ({ plugins }) => {
+        const pluginList = plugins ? JSON.parse(plugins) : [];
         const result =
           typeof name !== "undefined"
-            ? plugins.find(i => i.name === name)
-            : plugins;
+            ? pluginList.find(i => i.name === name)
+            : pluginList;
         resolve(result);
       });
     });
@@ -35,7 +36,7 @@ class PluginUtil {
     return new Promise(resolve => {
       chrome.storage.sync.set(
         {
-          plugins
+          plugins: JSON.stringify(plugins)
         },
         () => resolve(true)
       );

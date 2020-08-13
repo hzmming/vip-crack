@@ -7,7 +7,7 @@ export default function crossRequest(url, params) {
   return new Promise(resolve => {
     chrome.runtime.sendMessage(
       {
-        isRequest: true,
+        operate: "isRequest",
         url,
         params
       },

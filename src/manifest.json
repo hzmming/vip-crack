@@ -40,5 +40,6 @@
     "declarativeContent",
     "activeTab",
     "tabs"
-  ]
+  ],
+  "web_accessible_resources": ["app.js"]
 }

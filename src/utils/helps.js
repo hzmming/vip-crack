@@ -5,7 +5,7 @@ export function uuid() {
 }
 
 export const isSuit = pluginObj => {
-  return pluginObj.url && location.origin.includes(pluginObj.url);
+  return pluginObj.url && location.href.includes(pluginObj.url);
 };
 
 export function getActivePlugins(plugins) {

@@ -50,11 +50,13 @@ let options = {
     options: resolve("src", "options/options.js"),
     background: resolve("src", "background.js"),
     injects: resolve("src", "injects.js"),
+    // TODO injects.js的todo解决后，app这个入口可以删掉。以及 manifest.json 访问 web 资源的 app.js
+    app: resolve("src", "app"),
     content: resolve("src", "content.js"),
     ...pluginsEntry
   },
   chromeExtensionBoilerplate: {
-    notHotReload: [resolve("src", "injects.js"), resolve("src", "content.js")]
+    notHotReload: [resolve("src", "app.js"), resolve("src", "content.js")]
   },
   output: {
     path: resolve("build"),

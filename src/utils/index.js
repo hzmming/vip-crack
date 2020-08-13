@@ -6,14 +6,18 @@ import ApiUtil from "@/utils/ApiUtil";
  * 默认取第一条，并更新当前选中源
  */
 export async function getActiveApi() {
-  const [enable, apiList] = await Promise.all([
-    Config.get("enable"),
-    ApiUtil.get()
-  ]);
-  let api = apiList.find(i => i.id === enable);
-  if (!api) {
-    api = apiList[0];
-    await Config.set("selectedSource", api.id);
-  }
-  return api;
+  return new Promise(resolve => {
+    (async () => {
+      const [selectedSourceId, apiList] = await Promise.all([
+        Config.get("selectedSourceId"),
+        ApiUtil.get()
+      ]);
+      let api = apiList.find(i => i.id === selectedSourceId);
+      if (!api) {
+        api = apiList[0];
+        await Config.set("selectedSourceId", api.id);
+      }
+      resolve(api.api);
+    })();
+  });
 }

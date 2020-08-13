@@ -58,7 +58,7 @@ const network = {
 const core = {
   init() {
     hookPushState(() => {
-      window.postMessage({ resolveSourceInfo: true }, "*");
+      window.postMessage({ operate: "resolveSourceInfo" }, "*");
     });
   },
   beforeGetVideoDom() {},
