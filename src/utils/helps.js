@@ -4,7 +4,7 @@ export function uuid() {
   return v4();
 }
 
-const isSuit = pluginObj => {
+export const isSuit = pluginObj => {
   return pluginObj.url && location.origin.includes(pluginObj.url);
 };
 

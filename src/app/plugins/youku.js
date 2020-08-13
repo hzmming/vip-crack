@@ -1,5 +1,5 @@
 import { getPrototype } from "@/utils/helps";
-import { hookApply } from "../util";
+import { hookApply, wrapperInstaller } from "../util";
 
 const network = {
   injected: {
@@ -92,10 +92,10 @@ const core = {
   }
 };
 
-export default {
+wrapperInstaller({
   name: "youku",
   url: "v.youku.com/v_show",
   version: "0.0.1",
   network,
   core
-};
+});

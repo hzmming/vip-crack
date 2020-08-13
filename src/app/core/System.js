@@ -1,7 +1,7 @@
 import { hasOwnProperty, deferred } from "@/utils/helps";
 import { isSuit } from "@/utils/helps";
 import { proxy } from "ajax-hook";
-import JSONPHook from "@/vendor/JSONPHook";
+import * as JSONPHook from "@/vendor/JSONPHook";
 
 const LIFECYCLE_HOOKS = [
   "beforeGetVideoDom",

@@ -1,4 +1,4 @@
-import { uuid } from "@/util/helps";
+import { uuid } from "@/utils/helps";
 import config from "@/config.json";
 
 /**
@@ -24,7 +24,10 @@ class ApiUtil {
     // 查看仓库代码是否更新
     // 若更新，则同步
     return new Promise(resolve => {
-      const { apiListPath } = config;
+      let { apiListPath } = config;
+      if (process.env.NODE_ENV === "development") {
+        apiListPath = chrome.extension.getURL(apiListPath.split("/").pop());
+      }
       fetch(apiListPath)
         .then(res => res.json())
         .then(async ({ list }) => {

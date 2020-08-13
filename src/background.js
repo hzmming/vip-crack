@@ -49,13 +49,50 @@ dispatchObj["isNotice"] = request => {
 };
 
 /**
+ * 网络请求拦截
+ */
+const proxyNetwork = () => {
+  PluginUtil.get().then(plugins => {
+    plugins.forEach(plugin => {
+      const background = plugin?.network?.background;
+      if (!background) return;
+      const hostname = getHostname(plugin.url);
+      const bgList = [].concat(background);
+      bgList.forEach(bg => {
+        chrome.webRequest.onCompleted.addListener(
+          details => {
+            const { initiator, url, tabId } = details;
+            if (initiator && initiator.includes(hostname)) {
+              const matchList = [].concat(bg.url);
+              const isMatch = matchList.some(match => {
+                if (bg.operator === "equal") {
+                  return url === match;
+                }
+                // 默认 include
+                return url.includes(match);
+              });
+              if (isMatch) {
+                chrome.tabs.sendMessage(tabId, bg.message);
+              }
+            }
+          },
+          {
+            urls: [`*://*.${hostname}/*`]
+          }
+        );
+      });
+    });
+  });
+};
+
+/**
  * 同步插件和Api列表
  * 一天至少一次请求获取
  * TODO 多久更新应支持配置
  */
 const sync = () => {
   chrome.storage.local.get(
-    { lastUpdatedTime: null },
+    { lastUpdatedTime: undefined },
     async ({ lastUpdatedTime }) => {
       const currentTime = new Date().getTime();
       if (lastUpdatedTime) {
@@ -72,6 +109,8 @@ const sync = () => {
               lastUpdatedTime
             });
           }, Math.abs(currentInterval));
+          // TODO 此处代码分支写得有点乱，需重构
+          proxyNetwork();
           return;
         }
       }
@@ -87,50 +126,16 @@ const sync = () => {
       if (typeof config.enable === "undefined") {
         config.enable = true;
         config.selectedSource = apiList[0];
-        Config.setObj(config);
+        await Config.setObj(config);
       } else {
         const api = apiList.find(i => i.id === config.selectedSource);
         if (!api) {
           // api 不存在说明使用的源被删掉了，默认选中第一个源
-          Config.set("selectedSource", apiList[0].id);
+          await Config.set("selectedSource", apiList[0].id);
         }
       }
+      proxyNetwork();
     }
   );
 };
 sync();
-
-/**
- * 网络请求拦截
- */
-PluginUtil.get().then(plugins => {
-  plugins.forEach(plugin => {
-    const background = plugin?.network?.background;
-    if (!background) return;
-    const hostname = getHostname(plugin.url);
-    const bgList = [].concat(background);
-    bgList.forEach(bg => {
-      chrome.webRequest.onCompleted.addListener(
-        details => {
-          const { initiator, url, tabId } = details;
-          if (initiator && initiator.includes(hostname)) {
-            const matchList = [].concat(bg.url);
-            const isMatch = matchList.some(match => {
-              if (bg.operator === "equal") {
-                return url === match;
-              }
-              // 默认 include
-              return url.includes(match);
-            });
-            if (isMatch) {
-              chrome.tabs.sendMessage(tabId, bg.message);
-            }
-          }
-        },
-        {
-          urls: [`*://*.${hostname}/*`]
-        }
-      );
-    });
-  });
-});

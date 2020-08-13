@@ -45,7 +45,7 @@ class PluginUtil {
     return new Promise(resolve => {
       const pluginsPath = config.pluginsPath;
       const wait = [];
-      pluginsPath.forEach(async path => {
+      pluginsPath.forEach(path => {
         let finalPath = path;
         if (process.env.NODE_ENV === "development") {
           finalPath = chrome.extension.getURL(
@@ -53,24 +53,30 @@ class PluginUtil {
           );
         }
         // 此处await只是保证了生产promise，并不保证forEach循环之间的await顺序
-        wait.push(await fetchAndSave(finalPath));
+        wait.push(fetchAndSave(finalPath));
       });
       Promise.all(wait).then(() => resolve(true));
     });
   }
 }
 
-async function fetchAndSave(path) {
-  const sourceCode = await fetch(path).then(res => res.text());
-  // eslint-disable-next-line no-unused-vars
-  const VIP_CRACK_INSTALL = async pluginObj => {
-    const plugin = await PluginUtil.get({ name: pluginObj.name });
-    // 不是第一次，判断版本是否更新
-    if (plugin && !semver.gt(pluginObj.version, plugin.version)) return;
-    // 保存
-    PluginUtil.save(plugin);
-  };
-  eval(sourceCode);
+function fetchAndSave(path) {
+  return new Promise(resolve => {
+    fetch(path)
+      .then(res => res.text())
+      .then(sourceCode => {
+        // eslint-disable-next-line no-unused-vars
+        const VIP_CRACK_INSTALL = async pluginObj => {
+          const plugin = await PluginUtil.get({ name: pluginObj.name });
+          // 不是第一次，判断版本是否更新
+          if (plugin && !semver.gt(pluginObj.version, plugin.version)) return;
+          // 保存
+          await PluginUtil.save(pluginObj);
+          resolve(true);
+        };
+        eval(sourceCode);
+      });
+  });
 }
 
 export default PluginUtil;

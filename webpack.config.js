@@ -53,6 +53,9 @@ let options = {
     content: resolve("src", "content.js"),
     ...pluginsEntry
   },
+  chromeExtensionBoilerplate: {
+    notHotReload: [resolve("src", "injects.js"), resolve("src", "content.js")]
+  },
   output: {
     path: resolve("build"),
     filename: "[name].js"
@@ -125,9 +128,10 @@ let options = {
           }
         },
         { from: "src/assets", to: "assets" },
-        { from: "src/icons", to: "icons" }
+        { from: "src/icons", to: "icons" },
         // 配置就不做动态获取了，省点事
         // { from: "src/config.json", to: "config.json" }
+        { from: "src/apiList.json", to: "apiList.json" }
       ]
     }),
     new HtmlWebpackPlugin({
@@ -145,7 +149,8 @@ let options = {
 };
 
 if (env.NODE_ENV === "development") {
-  options.devtool = "cheap-module-eval-source-map";
+  // options.devtool = "cheap-module-eval-source-map";
+  options.devtool = "inline-source-map";
 }
 
 module.exports = options;

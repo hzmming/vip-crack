@@ -11,7 +11,7 @@ class Config {
   static get({ key } = {}) {
     return new Promise(resolve => {
       chrome.storage.sync.get({ config: {} }, ({ config }) => {
-        const result = typeof name !== "undefined" ? config[key] : config;
+        const result = typeof key !== "undefined" ? config[key] : config;
         resolve(result);
       });
     });

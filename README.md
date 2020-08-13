@@ -54,7 +54,8 @@ yarn add cross-env -D
 ```
 
 ```shell
-yarn add @babel/core @babel/preset-env @babel/runtime-corejs3 babel-loader @babel/plugin-proposal-optional-chaining @babel/plugin-proposal-class-properties -D
+yarn add @babel/core @babel/preset-env @babel/runtime-corejs3 babel-loader -D
+yarn add @babel/plugin-proposal-optional-chaining @babel/plugin-proposal-class-properties -D
 ```
 
 ```shell
