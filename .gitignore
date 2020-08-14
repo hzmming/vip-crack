@@ -3,4 +3,5 @@ node_modules
 build/*
 !build/plugins/qq.js
 !build/plugins/youku.js
+!build/apiList.json
 secrets.*.js
