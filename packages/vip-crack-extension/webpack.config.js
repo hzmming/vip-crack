@@ -5,6 +5,7 @@ const webpack = require("webpack"),
   env = require("./scripts/env"),
   CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
   CopyWebpackPlugin = require("copy-webpack-plugin"),
+  FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
   HtmlWebpackPlugin = require("html-webpack-plugin"),
   WriteFilePlugin = require("write-file-webpack-plugin");
 
@@ -55,11 +56,16 @@ let options = {
     rules: [
       {
         test: /\.js$/,
-        loader: "babel-loader",
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              configFile: resolve("../..", "babel.config.js"),
+            },
+          },
+          "eslint-loader",
+        ],
         exclude: /node_modules/,
-        options: {
-          configFile: resolve("../..", "babel.config.js"),
-        },
       },
       {
         test: /\.css$/,
@@ -84,6 +90,7 @@ let options = {
           // Compiles Sass to CSS
           "sass-loader",
         ],
+        exclude: /node_modules/,
       },
       {
         test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
@@ -144,6 +151,9 @@ let options = {
       chunks: ["options"],
     }),
     new WriteFilePlugin(),
+    new FriendlyErrorsWebpackPlugin({
+      clearConsole: true,
+    }),
   ],
 };
 

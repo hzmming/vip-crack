@@ -59,8 +59,10 @@ yarn add @babel/plugin-proposal-optional-chaining @babel/plugin-proposal-class-p
 ```
 
 ```shell
-yarn add eslint babel-eslint eslint-config-prettier eslint-plugin-prettier prettier -D
+yarn add eslint babel-eslint eslint-config-prettier eslint-plugin-prettier prettier eslint-loader -D
 ```
+
+注意，eslint-loader 必须配置在最后面（webpack loader 顺序为从右到左）。或者声明为 pre loader
 
 ```shell
 yarn add husky lint-staged -D
@@ -93,6 +95,19 @@ yarn add semver
 
 ```shell
 yarn add uuid
+```
+
+```shell
+yarn add friendly-errors-webpack-plugin -D
+```
+
+控制台更友好地输出信息
+需要关闭 webpack-dev-server 的信息输出
+
+```javascript
+new WebpackDevServer(compiler, {
+  quiet: true,
+});
 ```
 
 html-loader 使 html 支持 webpack 别名

@@ -38,7 +38,7 @@ class Config {
     return new Promise(resolve => {
       chrome.storage.sync.set(
         {
-          config
+          config,
         },
         () => resolve(true)
       );

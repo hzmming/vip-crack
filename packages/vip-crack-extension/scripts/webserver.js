@@ -11,7 +11,7 @@ for (let entryName in config.entry) {
   if (excludeEntriesToHotReload.indexOf(entryName) === -1) {
     config.entry[entryName] = [
       "webpack-dev-server/client?http://localhost:" + env.PORT,
-      "webpack/hot/dev-server"
+      "webpack/hot/dev-server",
     ].concat(config.entry[entryName]);
   }
 }
@@ -25,13 +25,14 @@ delete config.chromeExtensionBoilerplate;
 const compiler = webpack(config);
 
 const server = new WebpackDevServer(compiler, {
+  quiet: true,
   hot: true,
   contentBase: path.join(__dirname, "../build"),
   sockPort: env.PORT,
   headers: {
-    "Access-Control-Allow-Origin": "*"
+    "Access-Control-Allow-Origin": "*",
   },
-  disableHostCheck: true
+  disableHostCheck: true,
 });
 
 server.listen(env.PORT);

@@ -2,7 +2,8 @@
 const webpack = require("webpack"),
   path = require("path"),
   fs = require("fs"),
-  CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
+  CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
+  FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 
 const cwd = process.cwd();
 function resolve(...dir) {
@@ -31,11 +32,16 @@ const options = {
     rules: [
       {
         test: /\.js$/,
-        loader: "babel-loader",
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              configFile: resolve("../..", "babel.config.js"),
+            },
+          },
+          "eslint-loader",
+        ],
         exclude: /node_modules/,
-        options: {
-          configFile: resolve("../..", "babel.config.js"),
-        },
       },
     ],
   },
@@ -47,6 +53,9 @@ const options = {
   plugins: [
     // clean the build folder
     new CleanWebpackPlugin(),
+    new FriendlyErrorsWebpackPlugin({
+      clearConsole: true,
+    }),
   ],
 };
 

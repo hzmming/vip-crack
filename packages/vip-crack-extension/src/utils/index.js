@@ -10,7 +10,7 @@ export async function getActiveApi() {
     (async () => {
       const [selectedSourceId, apiList] = await Promise.all([
         Config.get("selectedSourceId"),
-        ApiUtil.get()
+        ApiUtil.get(),
       ]);
       let api = apiList.find(i => i.id === selectedSourceId);
       if (!api) {

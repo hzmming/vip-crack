@@ -17,7 +17,7 @@ class ApiUtil {
     const url = "data:," + result;
     chrome.downloads.download({
       url: url,
-      filename: "apiList.txt"
+      filename: "apiList.txt",
     });
   }
   static sync() {
@@ -77,7 +77,7 @@ class ApiUtil {
     return new Promise(resolve => {
       chrome.storage.sync.set(
         {
-          apiList
+          apiList,
         },
         () => resolve(true)
       );
