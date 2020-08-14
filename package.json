@@ -1,65 +1,14 @@
 {
-  "name": "vip-crack",
-  "description": "破解vip及去广告，目前仅(不完全)支持腾讯视频和优酷视频",
-  "version": "0.3.0",
+  "private": true,
   "scripts": {
-    "build": "cross-env NODE_ENV=production node scripts/build.js",
-    "start": "cross-env NODE_ENV=development node scripts/webserver.js"
+    "start": "yarn run start-core && yarn run start-extension",
+    "build": "yarn run build-core && yarn run build-extension",
+    "start-core": "yarn workspace vip-crack-core start",
+    "build-core": "yarn workspace vip-crack-core build",
+    "start-extension": "yarn workspace vip-crack-extension start",
+    "build-extension": "yarn workspace vip-crack-extension build"
   },
-  "author": "LoryHuang <844155285@qq.com>",
-  "license": "MIT",
-  "browserslist": [
-    "Chrome >= 52",
-    "Firefox >= 48"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.js": [
-      "eslint --fix"
-    ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
-    "@babel/preset-env": "^7.11.0",
-    "@babel/runtime-corejs3": "^7.11.2",
-    "@types/chrome": "^0.0.122",
-    "autoprefixer": "^9.8.6",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.0.3",
-    "core-js": "^3.6.5",
-    "cross-env": "^7.0.2",
-    "css-loader": "^4.2.1",
-    "eslint": "^7.6.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "file-loader": "^6.0.0",
-    "html-loader": "^1.1.0",
-    "html-webpack-plugin": "^4.3.0",
-    "husky": "^4.2.5",
-    "lint-staged": "^10.2.11",
-    "postcss-loader": "^3.0.0",
-    "prettier": "^2.0.5",
-    "sass": "^1.26.10",
-    "sass-loader": "^9.0.3",
-    "style-loader": "^1.2.1",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
-    "write-file-webpack-plugin": "^4.5.1"
-  },
-  "dependencies": {
-    "ajax-hook": "^2.0.3",
-    "hls.js": "^0.14.8",
-    "lodash.pick": "^4.4.0",
-    "semver": "^7.3.2",
-    "uuid": "^8.3.0"
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }

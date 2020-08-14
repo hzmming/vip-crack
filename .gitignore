@@ -1,7 +1,4 @@
 node_modules
-# 要包含目录下的某个子目录，不能屏蔽到一级目录，要用/*指明到二级目录
-build/*
-!build/plugins/qq.js
-!build/plugins/youku.js
-!build/apiList.json
-secrets.*.js
+packages/vip-crack-extension/build/*
+packages/vip-crack-extension/!build/apiList.json
+packages/vip-crack-extension/secrets.*.js

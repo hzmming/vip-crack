@@ -5,13 +5,13 @@ module.exports = {
     node: true,
     es2020: true,
     jest: true,
-    webextensions: true
+    webextensions: true,
   },
   extends: ["eslint:recommended", "plugin:prettier/recommended"],
   parser: "babel-eslint",
   parserOptions: {
     ecmaVersion: 11,
-    sourceType: "module"
+    sourceType: "module",
   },
-  rules: {}
+  rules: {},
 };

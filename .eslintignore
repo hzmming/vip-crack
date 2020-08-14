@@ -1,4 +1,4 @@
 node_modules
-dist
-build
-src/vendor
+packages/vip-crack-extension/dist
+packages/vip-crack-extension/build
+packages/vip-crack-core/src/vendor

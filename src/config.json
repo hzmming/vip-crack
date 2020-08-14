@@ -1,7 +1,0 @@
-{
-  "pluginsPath": [
-    "https://cdn.jsdelivr.net/gh/hzmming/vip-crack/build/plugins/qq.js",
-    "https://cdn.jsdelivr.net/gh/hzmming/vip-crack/build/plugins/youku.js"
-  ],
-  "apiListPath": "https://cdn.jsdelivr.net/gh/hzmming/vip-crack/build/apiList.json"
-}
