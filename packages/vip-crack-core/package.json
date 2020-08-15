@@ -37,7 +37,8 @@
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpackbar": "^4.0.0"
   },
   "dependencies": {
     "ajax-hook": "^2.0.3",

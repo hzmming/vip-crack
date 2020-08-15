@@ -3,7 +3,8 @@ const webpack = require("webpack"),
   path = require("path"),
   fs = require("fs"),
   CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
-  FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
+  FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
+  WebpackBar = require("webpackbar");
 
 const cwd = process.cwd();
 function resolve(...dir) {
@@ -53,6 +54,7 @@ const options = {
   plugins: [
     // clean the build folder
     new CleanWebpackPlugin(),
+    new WebpackBar(),
     new FriendlyErrorsWebpackPlugin({
       clearConsole: true,
     }),

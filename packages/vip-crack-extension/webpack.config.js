@@ -7,6 +7,7 @@ const webpack = require("webpack"),
   CopyWebpackPlugin = require("copy-webpack-plugin"),
   FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
   HtmlWebpackPlugin = require("html-webpack-plugin"),
+  WebpackBar = require("webpackbar"),
   WriteFilePlugin = require("write-file-webpack-plugin");
 
 const cwd = process.cwd();
@@ -113,6 +114,7 @@ let options = {
   plugins: [
     // clean the build folder
     new CleanWebpackPlugin(),
+    new WebpackBar(),
     new CopyWebpackPlugin({
       patterns: [
         {
