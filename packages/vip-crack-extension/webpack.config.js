@@ -46,7 +46,7 @@ let options = {
     content: resolve("src", "content.js"),
   },
   chromeExtensionBoilerplate: {
-    notHotReload: [resolve("src", "app.js"), resolve("src", "content.js")],
+    notHotReload: [resolve("src", "injects.js"), resolve("src", "content.js")],
   },
   output: {
     path: resolve("build"),
