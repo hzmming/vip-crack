@@ -46,10 +46,10 @@ yarn add clean-webpack-plugin copy-webpack-plugin css-loader file-loader html-lo
 ```
 
 ```shell
-yarn add html-webpack-plugin@4.2.0
+yarn add html-webpack-plugin@3.2.0
 ```
 
-html-webpack-plugin 这插件咋这么多问题。。。锁死版本到 4.2.0。因为 4.2.1 修改的改动会造成 bug，而且装最新版的也一样会有 bug，就是改完 popup.js，popup.html 好像没有正常生成，反正 chrome 会提示找不到文件，整个 chrome 扩展都得删掉，重启服务才能再次加载，有毒得不行！
+html-webpack-plugin 这插件咋这么多问题。。。锁死版本到 3.2.0。不然热更新会出问题，更新完构建失败，chrome 扩展报 options.html页面找不到。仔细一看，确实没生成
 
 ```shell
 yarn add write-file-webpack-plugin -D
