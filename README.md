@@ -49,7 +49,7 @@ yarn add clean-webpack-plugin copy-webpack-plugin css-loader file-loader html-lo
 yarn add html-webpack-plugin@3.2.0
 ```
 
-html-webpack-plugin 这插件咋这么多问题。。。锁死版本到 3.2.0。不然热更新会出问题，更新完构建失败，chrome 扩展报 options.html页面找不到。仔细一看，确实没生成
+html-webpack-plugin 这插件咋这么多问题。。。锁死版本到 3.2.0。不然热更新会出问题，更新完构建失败，chrome 扩展报 options.html 页面找不到。仔细一看，确实没生成
 
 ```shell
 yarn add write-file-webpack-plugin -D
@@ -124,6 +124,20 @@ html 引入样式，两种方案
 1. popup.html 使用 link 引入 css，则 webpack 不能使用 style-loader，因为 target 环境不是浏览器 web，会报 document is not undefined，改用 mini-css-extract-plugin，单独生成 css 文件
 2. popup.html 不使用 link 引入 css，webpack 继续使用 style-loader，样式在 js 里引入，如 import "./popup.css"
    本来想着 css 还是尽早加载比较好，谁知道 mini-css-extract-plugin 和 html-webpack-plugin 结合使用会报错。。。[issue](https://github.com/webpack-contrib/mini-css-extract-plugin/issues/489)
+
+开发 popup、options 页面使用 vue，UI 库采用 ElementUI
+
+```shell
+yarn add vue
+# vue-template-compiler 和 vue-loader 必须配套使用
+yarn add vue-loader vue-template-compiler -D
+```
+
+```shell
+yarn add element-ui
+# 按需引入用到。调整babel相关配置
+yarn add babel-plugin-component -D
+```
 
 ### e2e 测试
 

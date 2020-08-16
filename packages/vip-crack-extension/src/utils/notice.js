@@ -7,7 +7,7 @@ function Notice(options = {}) {
   // TODO 只做了error，其它情况待续
   const params = {
     type: "basic",
-    iconUrl: "assets/img/fail.jpg", // 简单地贴个失败图片
+    iconUrl: require("@/assets/img/fail.jpg"), // 简单地贴个失败图片
     title: "",
   };
   params.message = options.message;

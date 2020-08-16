@@ -3,10 +3,11 @@ const webpack = require("webpack"),
   path = require("path"),
   fs = require("fs"),
   env = require("./scripts/env"),
-  CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin,
+  { CleanWebpackPlugin } = require("clean-webpack-plugin"),
   CopyWebpackPlugin = require("copy-webpack-plugin"),
   FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin"),
   HtmlWebpackPlugin = require("html-webpack-plugin"),
+  VueLoaderPlugin = require("vue-loader/lib/plugin"),
   WebpackBar = require("webpackbar"),
   WriteFilePlugin = require("write-file-webpack-plugin");
 
@@ -19,19 +20,6 @@ function resolve(...dir) {
 const alias = {};
 
 const secretsPath = resolve("secrets." + env.NODE_ENV + ".js");
-
-const fileExtensions = [
-  "jpg",
-  "jpeg",
-  "png",
-  "gif",
-  "eot",
-  "otf",
-  "svg",
-  "ttf",
-  "woff",
-  "woff2",
-];
 
 if (fs.existsSync(secretsPath)) {
   alias["secrets"] = secretsPath;
@@ -56,6 +44,10 @@ let options = {
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        use: ["vue-loader"],
+      },
+      {
         test: /\.js$/,
         use: [
           {
@@ -72,7 +64,6 @@ let options = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader", "postcss-loader"],
-        exclude: /node_modules/,
       },
       {
         test: /\.s[ac]ss$/i,
@@ -92,12 +83,78 @@ let options = {
           // Compiles Sass to CSS
           "sass-loader",
         ],
-        exclude: /node_modules/,
       },
+      // images
       {
-        test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
-        loader: "file-loader?name=[name].[ext]",
-        exclude: /node_modules/,
+        test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 4096,
+              fallback: {
+                loader: "file-loader",
+                options: {
+                  name: "img/[name].[hash:8].[ext]",
+                  // 转成 esModule 的好处我还没体验到，但直接让我图片变成[object%20Module]出不来了~~
+                  esModule: false,
+                },
+              },
+            },
+          },
+        ],
+      },
+      // svg
+      {
+        test: /\.(svg)(\?.*)?$/,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "img/[name].[hash:8].[ext]",
+              esModule: false,
+            },
+          },
+        ],
+      },
+      // fonts
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 4096,
+              fallback: {
+                loader: "file-loader",
+                options: {
+                  name: "fonts/[name].[hash:8].[ext]",
+                  esModule: false,
+                },
+              },
+            },
+          },
+        ],
+      },
+      // media
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        use: [
+          {
+            // 参考 vue-cli 生成的 webpack 配置。话说 url-loader 处理视频会变成什么~~
+            loader: "url-loader",
+            options: {
+              limit: 4096,
+              fallback: {
+                loader: "file-loader",
+                options: {
+                  name: "media/[name].[hash:8].[ext]",
+                  esModule: false,
+                },
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.html$/,
@@ -107,6 +164,7 @@ let options = {
     ],
   },
   resolve: {
+    extensions: [".js", ".vue", ".json"],
     alias: {
       ...alias,
       "@": resolve("src"),
@@ -131,7 +189,6 @@ let options = {
             );
           },
         },
-        { from: "src/assets", to: "assets" },
         { from: "src/icons", to: "icons" },
         // 配置就不做动态获取了，省点事
         // { from: "src/config.json", to: "config.json" }
@@ -157,6 +214,7 @@ let options = {
     new FriendlyErrorsWebpackPlugin({
       clearConsole: true,
     }),
+    new VueLoaderPlugin(),
   ],
 };
 
