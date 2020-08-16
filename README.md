@@ -139,6 +139,11 @@ yarn add element-ui
 yarn add babel-plugin-component -D
 ```
 
+```shell
+# 配置vue的eslint校验。调整.eslintrc.js相关配置
+yarn add eslint-plugin-vue vue-eslint-parser -D
+```
+
 ### e2e 测试
 
 使用 karma 集成浏览器测试？
