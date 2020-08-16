@@ -12,4 +12,6 @@ module.exports = {
       },
     ],
   ],
+  // 子目录使用自己的配置文件 .babelrc.js/json
+  babelrcRoots: [".", "packages/*"],
 };

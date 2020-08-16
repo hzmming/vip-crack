@@ -61,7 +61,8 @@ let options = {
           {
             loader: "babel-loader",
             options: {
-              configFile: resolve("../..", "babel.config.js"),
+              // 向上找babel.config.js/json。也可以使用configFile自定义位置
+              rootMode: "upward",
             },
           },
           "eslint-loader",
