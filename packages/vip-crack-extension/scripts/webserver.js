@@ -33,6 +33,11 @@ const server = new WebpackDevServer(compiler, {
     "Access-Control-Allow-Origin": "*",
   },
   disableHostCheck: true,
+  // 报错时，全屏遮罩
+  overlay: {
+    warnings: false,
+    errors: true,
+  },
 });
 
 server.listen(env.PORT);
