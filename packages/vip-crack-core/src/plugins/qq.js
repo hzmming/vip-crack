@@ -120,6 +120,9 @@ const core = {
 wrapperInstaller({
   // 插件名称
   name: "qq",
+  // 用于显示
+  nickname: "腾讯视频",
+  description: "去广告及以及不完全支持动漫、电影",
   // 指定网站使用插件，强制只到一级域名：其实qq的全url是 v.qq.com/x/cover，但咱们只要写到qq这级即可
   url: "qq.com/x/cover",
   // 版本号
