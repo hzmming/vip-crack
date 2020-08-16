@@ -97,6 +97,7 @@ let options = {
             loader: "url-loader",
             options: {
               limit: 4096,
+              esModule: false,
               fallback: {
                 loader: "file-loader",
                 options: {
@@ -130,6 +131,7 @@ let options = {
             loader: "url-loader",
             options: {
               limit: 4096,
+              esModule: false,
               fallback: {
                 loader: "file-loader",
                 options: {
@@ -150,6 +152,7 @@ let options = {
             loader: "url-loader",
             options: {
               limit: 4096,
+              esModule: false,
               fallback: {
                 loader: "file-loader",
                 options: {

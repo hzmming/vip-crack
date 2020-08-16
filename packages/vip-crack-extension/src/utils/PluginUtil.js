@@ -1,7 +1,10 @@
-import { convertSourceObj } from "shared/util";
+import { convertSourceObj, deferred } from "shared/util";
+import Config from "@/utils/Config";
 const semver = require("semver");
 const config = require("@/config.json");
 const pick = require("lodash.pick");
+
+let waitPromise = null;
 
 /**
  * 插件工具类。负责插件相关操作，包括保存插件信息、同步插件等
@@ -27,6 +30,11 @@ class PluginUtil {
     });
   }
   static async save(plugin) {
+    // 并发+异步，会出现数据不同步问题。有点添加同步锁的感觉
+    if (waitPromise) {
+      await waitPromise;
+    }
+    waitPromise = deferred();
     const plugins = await PluginUtil.get();
     const target = plugins.find(i => i.name === plugin.name);
     if (target) {
@@ -34,12 +42,16 @@ class PluginUtil {
     } else {
       plugins.push(plugin);
     }
-    return new Promise(resolve => {
+    new Promise(resolve => {
       chrome.storage.local.set(
         {
           plugins: plugins,
         },
-        () => resolve(true)
+        () => {
+          waitPromise.resolve();
+          waitPromise = null;
+          resolve(true);
+        }
       );
     });
   }
@@ -79,10 +91,22 @@ function fetchAndSave(path) {
         }
         // 保存
         const wrapper = {
-          ...pick(pluginObj, ["name", "url", "version"]),
+          ...pick(pluginObj, [
+            "name",
+            "nickname",
+            "description",
+            "url",
+            "version",
+          ]),
           sourceCode,
         };
         await PluginUtil.save(wrapper);
+        // 默认开启
+        const enableObj = (await Config.get("enableObj")) || {};
+        // 原先有值，则不动
+        const preserve = enableObj[pluginObj.name];
+        typeof preserve === "undefined" && (enableObj[pluginObj.name] = true);
+        await Config.set("enableObj", enableObj);
         resolve(true);
       });
   });

@@ -1,0 +1,129 @@
+.popup-box {
+  width: 330px;
+  background: #fefefe;
+  .header {
+    border-bottom: 1px solid #ddd;
+    font-weight: bold;
+    padding: 8px;
+    text-align: center;
+    font-size: 18px;
+    color: #1296db;
+    > img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  .panel {
+    margin-top: 16px;
+    padding: 0 15px;
+    .panel-title {
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: #444;
+    }
+    .panel-body {
+      margin-left: 25px;
+    }
+  }
+  .select-panel {
+    margin-top: 0px;
+    padding-top: 30px;
+    text-align: right;
+    // background: url("@/icons/icon.png") no-repeat;
+    .select-box {
+      display: flex;
+      .prefix-tip {
+        background: #eee;
+        color: #555;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        border: 1px solid #dcdfe6;
+        border-right: 0;
+        border-bottom-left-radius: 5px;
+        border-top-left-radius: 5px;
+      }
+      ::v-deep {
+        .el-select {
+          flex: 1px;
+          .el-input__inner {
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 0;
+          }
+        }
+      }
+    }
+  }
+  .separate-line {
+    height: 1px;
+    background: #ddd;
+    margin-top: 4px;
+  }
+  .update-panel {
+    .update-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      ::v-deep {
+        .el-select {
+          width: 120px;
+        }
+      }
+    }
+  }
+  .plugin-panel {
+    .plugin-list {
+      .plugin-item {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 5px 10px;
+        cursor: pointer;
+        border: 1px solid #ddd;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        .plugin-name {
+          flex: 1;
+          margin-left: 20px;
+          margin-right: 10px;
+        }
+        .plugin-version {
+          display: flex;
+          align-items: center;
+          color: #777;
+          font-weight: bold;
+          .version-tip {
+            margin-right: 10px;
+          }
+        }
+        &:hover {
+          border-color: #409eff;
+        }
+      }
+    }
+  }
+  .devtool-panel {
+    margin-top: 40px;
+  }
+
+  .footer {
+    height: 42px;
+    color: #545454;
+    background-color: #f1f3f4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+
+    > img {
+      width: 22px;
+      cursor: pointer;
+      opacity: 0.5;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}

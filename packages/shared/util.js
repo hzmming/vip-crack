@@ -95,3 +95,11 @@ export function convertSourceObj(sourceCode) {
   eval(sourceCode);
   return originPlugin;
 }
+
+/**
+ * 将小时转为毫秒
+ * @param {小时} hour
+ */
+export function hourToMillisecond(hour) {
+  return hour * 60 * 60 * 1000;
+}

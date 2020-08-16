@@ -1,5 +1,5 @@
 import PluginUtil from "@/utils/PluginUtil";
-import { getHostname, convertSourceObj } from "shared/util";
+import { getHostname, convertSourceObj, hourToMillisecond } from "shared/util";
 import ApiUtil from "./utils/ApiUtil";
 import Config from "./utils/Config";
 
@@ -150,4 +150,26 @@ const sync = () => {
     proxyNetwork();
   });
 };
-sync();
+
+const init = async () => {
+  /**
+   * enableObj: 各插件的开启状态
+   * intervalVal: 更新周期
+   */
+  const config = await Config.get();
+  if (JSON.stringify(config) !== "{}") return;
+  await Config.setObj({
+    enableObj: {},
+    intervalVal: hourToMillisecond(6),
+  });
+};
+
+/**
+ * 插件第一次安装、插件更新、浏览器更新，均会触发事件onInstalled
+ */
+chrome.runtime.onInstalled.addListener(async () => {
+  // 初始化
+  await init();
+  // 第一次，同步
+  sync();
+});

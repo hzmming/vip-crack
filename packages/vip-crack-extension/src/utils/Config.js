@@ -1,3 +1,7 @@
+import { deferred } from "shared/util";
+
+const waitPromise = {};
+
 /**
  * 配置类。负责配置相关操作：包括是否开启、当前选择源等等
  * 数据格式为
@@ -8,7 +12,10 @@
  * }
  */
 class Config {
-  static get(key) {
+  static async get(key) {
+    if (waitPromise[key]) {
+      await waitPromise[key];
+    }
     return new Promise(resolve => {
       chrome.storage.sync.get({ config: {} }, ({ config }) => {
         const result = typeof key !== "undefined" ? config[key] : config;
@@ -16,12 +23,19 @@ class Config {
       });
     });
   }
-  static set(key, val) {
+  static async set(key, val) {
+    // 还是用数据库吧。。。这并发异步问题，能整死人
+    if (waitPromise[key]) {
+      await waitPromise[key];
+    }
+    waitPromise[key] = deferred();
     return new Promise(resolve => {
       chrome.storage.sync.get({ config: {} }, async ({ config }) => {
         config[key] = val;
         await Config.override(config);
         resolve(true);
+        waitPromise[key].resolve();
+        waitPromise[key] = undefined;
       });
     });
   }
