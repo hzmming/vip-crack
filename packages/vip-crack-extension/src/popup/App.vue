@@ -13,6 +13,7 @@
             v-model="selectedSourceId"
             size="small"
             placeholder="请选择接口"
+            @change="selectSource"
           >
             <el-option
               v-for="item in apiList"
@@ -110,7 +111,7 @@ import { hourToMillisecond } from "shared/util";
 import ApiUtil from "@/utils/ApiUtil";
 import PluginUtil from "@/utils/PluginUtil";
 import Config from "@/utils/Config";
-import { createNear } from "@/utils/tab";
+import { createNear, reload } from "@/utils/tab";
 
 const intervalList = [
   {
@@ -211,6 +212,9 @@ export default {
     },
     jumpToSetting() {
       createNear({ url: "options.html", closeWindow: true });
+    },
+    selectSource() {
+      reload();
     },
   },
 };
