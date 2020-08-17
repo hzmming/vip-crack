@@ -112,6 +112,7 @@ import ApiUtil from "@/utils/ApiUtil";
 import PluginUtil from "@/utils/PluginUtil";
 import Config from "@/utils/Config";
 import { createNear, reload } from "@/utils/tab";
+import { sync } from "@/utils";
 
 const intervalList = [
   {
@@ -168,25 +169,23 @@ export default {
       this.intervalVal = config.intervalVal;
     },
     async syncData() {
-      try {
-        this.showLoading = true;
-        await PluginUtil.sync();
-        await ApiUtil.sync();
-        this.getApiList();
-        this.getPluginList();
-        this.getConfig();
-      } catch (e) {
+      this.showLoading = true;
+      const result = await sync();
+      if (!result) {
         this.$message.error({
           message: "同步失败",
           customClass: "mini-message",
         });
-      } finally {
-        this.showLoading = false;
-        this.$message.success({
-          message: "同步成功",
-          customClass: "mini-message",
-        });
+        return;
       }
+      this.showLoading = false;
+      this.$message.success({
+        message: "同步成功",
+        customClass: "mini-message",
+      });
+      this.getApiList();
+      this.getPluginList();
+      this.getConfig();
     },
     async togglePlugin(name) {
       const enableObj = await Config.get("enableObj");

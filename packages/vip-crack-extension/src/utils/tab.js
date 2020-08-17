@@ -26,7 +26,7 @@ export const createNear = ({
   );
 };
 
-export const sendMessage = (message, callback) => {
+export const sendMessageToActiveTab = (message, callback) => {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.sendMessage(tabs[0].id, message, function (response) {
       if (callback) callback(response);

@@ -40,7 +40,7 @@ const main = () => {
     const activePlugins = getActivePlugins(plugins);
     if (activePlugins.length) {
       // 2. 点亮图标
-      chrome.runtime.sendMessage({ operate: "enableVipCrack" });
+      chrome.runtime.sendMessage({ operate: "enableVipCrack", value: true });
       // 3. 启动破解
       window.postMessage(
         { operate: "registerCrackPlugin", plugins: activePlugins },
@@ -53,6 +53,8 @@ const main = () => {
       listenBackground();
       // 5. 获取视频解析信息
       resolveSourceInfo();
+      // 6. 判断是否自动同步。写在这里面，表示只有打开匹配到的网站才触发背后更新，不要给用户造成太多莫名的负担
+      chrome.runtime.sendMessage({ operate: "checkForUpdate" });
     }
   });
 };

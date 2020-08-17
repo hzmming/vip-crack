@@ -5,6 +5,22 @@ import Config from "./utils/Config";
 
 const dispatchObj = {};
 
+// popup.js 与 background.js 之前通信不通过chrome.runtime.sendMessage，使用 chrome.extension.getBackgroundPage()
+window.dispatchAction = params => {
+  return new Promise(resolve => {
+    const request = {
+      ...params,
+    };
+    const sender = {};
+    const sendResponse = response => {
+      resolve(response);
+    };
+    const fn = dispatchObj[request.operate];
+    // 注意：request 与 sender 都只是模拟 chrome.runtime.onMessage 的参数，只是保证行为基本一致而已，别当真！！！
+    fn && fn(request, sender, sendResponse);
+  });
+};
+
 const listen = () => {
   chrome.runtime.onMessage.addListener(function (
     request,
@@ -13,7 +29,8 @@ const listen = () => {
   ) {
     if (sender.tab && typeof request.operate !== "undefined") {
       const fn = dispatchObj[request.operate];
-      return fn && fn(request, sender, sendResponse);
+      const result = fn && fn(request, sender, sendResponse);
+      return result;
     }
   });
 };
@@ -23,7 +40,7 @@ listen();
  * 点亮图标
  */
 dispatchObj["enableVipCrack"] = (request, sender) => {
-  const status = request.enableVipCrack;
+  const status = request.value;
   chrome.browserAction.setIcon({
     tabId: sender.tab.id,
     path: {
@@ -64,8 +81,21 @@ dispatchObj["isRequest"] = (request, sender, sendResponse) => {
   return true;
 };
 
+dispatchObj["checkForUpdate"] = () => {
+  checkAndSync();
+};
+
+dispatchObj["sync"] = (request, sender, sendResponse) => {
+  (async () => {
+    await sync();
+    sendResponse(true);
+  })();
+  return true;
+};
+
 /**
  * 网络请求拦截
+ * FIXME background.js销毁后就失效。难整。因为现在没用到了，所以先不改
  */
 const proxyNetwork = () => {
   PluginUtil.get().then(plugins => {
@@ -103,51 +133,56 @@ const proxyNetwork = () => {
   });
 };
 
+// UNKNOWN 只有解决完 proxyNetwork 的 bug，这里才能进行下去
+const clearProxyNetwork = () => {};
+
+const sync = async () => {
+  // 同步
+  const [, apiList] = await Promise.all([PluginUtil.sync(), ApiUtil.sync()]);
+
+  // 更新上一次同步时间
+  const currentTime = new Date().getTime();
+  chrome.storage.local.set({
+    lastUpdatedTime: currentTime,
+  });
+
+  // 保证同步后选中源依然有效
+  const config = await Config.get();
+  if (typeof config.selectedSourceId === "undefined") {
+    // 如果是第一次，默认开启并使用第一个源
+    config.selectedSourceId = apiList[0].id;
+    await Config.setObj(config);
+  } else {
+    const api = apiList.find(i => i.id === config.selectedSourceId);
+    if (!api) {
+      // api 不存在说明使用的源被删掉了，默认选中第一个源
+      await Config.set("selectedSourceId", apiList[0].id);
+    }
+  }
+
+  // 取消先前网络监听
+  clearProxyNetwork();
+
+  // 监听网络
+  proxyNetwork();
+};
+
 /**
  * 同步插件和Api列表
- * 一天至少一次请求获取
- * TODO 多久更新应支持配置
  */
-const sync = () => {
+const checkAndSync = () => {
   chrome.storage.local.get(["lastUpdatedTime"], async ({ lastUpdatedTime }) => {
+    // 存在上一次更新时间，判断是否需要立即更新
     const currentTime = new Date().getTime();
     if (lastUpdatedTime) {
-      // 判断相隔是否超过一天，超过则更新
       const interval = currentTime - lastUpdatedTime;
       // 需要更新的间隔时间（单位：ms）
-      const needToUpdateInterval = 1 * 24 * 60 * 60 * 1000;
-      const currentInterval = interval - needToUpdateInterval;
-      if (currentInterval < 0) {
-        // 定时，时间到了，就更新
-        setTimeout(async () => {
-          await Promise.all([PluginUtil.sync(), ApiUtil.sync()]);
-          chrome.storage.local.set({
-            lastUpdatedTime,
-          });
-        }, Math.abs(currentInterval));
-        // TODO 此处代码分支写得有点乱，需重构
-        proxyNetwork();
-        return;
-      }
+      const needToUpdateInterval = await Config.get("intervalVal");
+      // 说明还没到更新的点
+      if (interval < needToUpdateInterval) return;
     }
-    const [, apiList] = await Promise.all([PluginUtil.sync(), ApiUtil.sync()]);
-    chrome.storage.local.set({
-      lastUpdatedTime: currentTime,
-    });
-    // 如果是第一次，默认开启并使用第一个源
-    const config = await Config.get();
-    if (typeof config.enable === "undefined") {
-      config.enable = true;
-      config.selectedSourceId = apiList[0].id;
-      await Config.setObj(config);
-    } else {
-      const api = apiList.find(i => i.id === config.selectedSourceId);
-      if (!api) {
-        // api 不存在说明使用的源被删掉了，默认选中第一个源
-        await Config.set("selectedSourceId", apiList[0].id);
-      }
-    }
-    proxyNetwork();
+
+    sync();
   });
 };
 
@@ -159,6 +194,7 @@ const init = async () => {
   const config = await Config.get();
   if (JSON.stringify(config) !== "{}") return;
   await Config.setObj({
+    enable: true,
     enableObj: {},
     intervalVal: hourToMillisecond(6),
   });
@@ -170,6 +206,6 @@ const init = async () => {
 chrome.runtime.onInstalled.addListener(async () => {
   // 初始化
   await init();
-  // 第一次，同步
+  // 同步
   sync();
 });

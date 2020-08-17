@@ -21,3 +21,22 @@ export async function getActiveApi() {
     })();
   });
 }
+
+export async function sendMessage(message) {
+  return new Promise(resolve => {
+    chrome.runtime.sendMessage(message, response => {
+      resolve(response);
+    });
+  });
+}
+
+export async function sync() {
+  const message = { operate: "sync" };
+  if (chrome.extension) {
+    // 来自 popup 或者 options。二者与 background 的通信方式不一样
+    const background = chrome.extension.getBackgroundPage();
+    return await background.dispatchAction(message);
+  } else {
+    return await sendMessage(message);
+  }
+}
