@@ -221,7 +221,8 @@ export default {
     jumpToSetting() {
       createNear({ url: "options.html", closeWindow: true });
     },
-    selectSource() {
+    async selectSource() {
+      await Config.set("selectedSourceId", this.selectedSourceId);
       reload();
     },
   },
