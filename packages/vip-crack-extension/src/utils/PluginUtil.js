@@ -61,7 +61,7 @@ class PluginUtil {
       const wait = [];
       pluginsPath.forEach(path => {
         let finalPath = path;
-        if (process.env.NODE_ENV === "development") {
+        if (process.env.ENV === "local") {
           finalPath = chrome.extension.getURL(
             "plugins/" + path.split("/").pop()
           );
@@ -82,9 +82,9 @@ function fetchAndSave(path) {
         const pluginObj = convertSourceObj(sourceCode);
         const plugin = await PluginUtil.get({ name: pluginObj.name });
         if (plugin) {
-          // 不是第一次，判断版本是否更新。开发模式不检测版本
+          // 不是第一次，判断版本是否更新。本地模式不检测版本
           if (
-            process.env.NODE_ENV !== "development" &&
+            process.env.ENV !== "local" &&
             !semver.gt(pluginObj.version, plugin.version)
           )
             return;

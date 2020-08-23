@@ -25,7 +25,7 @@ class ApiUtil {
     // 若更新，则同步
     return new Promise(resolve => {
       let { apiListPath } = config;
-      if (process.env.NODE_ENV === "development") {
+      if (process.env.ENV === "local") {
         apiListPath = chrome.extension.getURL(apiListPath.split("/").pop());
       }
       fetch(apiListPath)

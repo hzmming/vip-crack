@@ -3,10 +3,13 @@
   "scripts": {
     "start": "yarn run start:core & yarn run start:extension",
     "build": "yarn run build:core && yarn run build:extension",
+    "build:local": "yarn run build:core:local && yarn run build:extension:local",
     "start:core": "yarn workspace vip-crack-core start",
     "build:core": "yarn workspace vip-crack-core build",
+    "build:core:local": "yarn workspace vip-crack-core build:local",
     "start:extension": "yarn workspace vip-crack-extension start",
-    "build:extension": "yarn workspace vip-crack-extension build"
+    "build:extension": "yarn workspace vip-crack-extension build",
+    "build:extension:local": "yarn workspace vip-crack-extension build:local"
   },
   "workspaces": [
     "packages/*"

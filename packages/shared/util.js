@@ -122,3 +122,9 @@ export function getChromeVersion() {
     patch: pieces[4],
   };
 }
+
+export function log(...msg) {
+  if (process.env.ENV === "local") {
+    console.log(...msg);
+  }
+}

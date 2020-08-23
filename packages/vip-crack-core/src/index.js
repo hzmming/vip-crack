@@ -1,6 +1,6 @@
 import System from "@/core/System";
 import Video from "@/core/Video";
-import { convertSourceObj } from "shared/util";
+import { convertSourceObj, log } from "shared/util";
 
 const video = new Video();
 const system = new System(video);
@@ -51,7 +51,7 @@ dispatchObj.necessaryCrack = function (e) {
     system.resolveNecessary();
   } else {
     video.recoverPlay();
-    console.log("非vip视频，正常播放");
+    log("非vip视频，正常播放");
   }
 };
 // 播放历史记录

@@ -1,7 +1,12 @@
 import PluginUtil from "@/utils/PluginUtil";
 import crossRequest from "@/utils/crossRequest";
 import notice from "@/utils/notice";
-import { getActivePlugins, deferred, generateRequestParams } from "shared/util";
+import {
+  getActivePlugins,
+  deferred,
+  generateRequestParams,
+  log,
+} from "shared/util";
 import { getActiveApi } from "@/utils";
 
 const dispatchBrowserObj = {};
@@ -110,8 +115,8 @@ async function resolveSourceInfo(immediate) {
       )
     );
 
-  console.log("解析成功，类型为" + res.type);
-  console.log("地址为" + res.url);
+  log("解析成功，类型为" + res.type);
+  log("地址为" + res.url);
 
   // 通知crack.js执行破解
   window.postMessage({ operate: "sourceInfo", immediate, ...res }, "*");
