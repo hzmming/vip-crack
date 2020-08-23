@@ -53,3 +53,17 @@ export const changeBrowserIcon = status => {
     }
   );
 };
+
+export const getLocation = async () => {
+  return new Promise(res => {
+    chrome.tabs.query(
+      {
+        active: !0,
+        currentWindow: !0,
+      },
+      a => {
+        res(a[0].url);
+      }
+    );
+  });
+};

@@ -3,7 +3,10 @@
     <div class="header">
       Vip Crack
     </div>
-    <div v-loading="showLoading">
+    <div v-if="!isAdapted" class="disabled-tip">
+      无法在此页上运行
+    </div>
+    <div v-else v-loading="showLoading">
       <div class="select-panel panel">
         <div class="select-box">
           <div class="prefix-tip">
@@ -111,7 +114,7 @@ import { hourToMillisecond } from "shared/util";
 import ApiUtil from "@/utils/ApiUtil";
 import PluginUtil from "@/utils/PluginUtil";
 import Config from "@/utils/Config";
-import { createNear, reload } from "@/utils/tab";
+import { createNear, reload, getLocation } from "@/utils/tab";
 import { sync } from "@/utils";
 
 const intervalList = [
@@ -148,6 +151,7 @@ export default {
       selectedSourceId: "",
       enableObj: {},
       showLoading: false,
+      isAdapted: false,
     };
   },
   created() {
@@ -161,6 +165,11 @@ export default {
     },
     async getPluginList() {
       this.pluginList = await PluginUtil.get();
+      const url = await getLocation();
+      const result = this.pluginList.find(plugin => {
+        return url.includes(plugin.url);
+      });
+      this.isAdapted = !!result;
     },
     async getConfig() {
       const config = await Config.get();
