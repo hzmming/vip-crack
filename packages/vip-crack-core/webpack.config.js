@@ -53,6 +53,7 @@ const options = {
     },
   },
   plugins: [
+    new webpack.EnvironmentPlugin(["NODE_ENV", "ENV"]),
     // clean the build folder
     new CleanWebpackPlugin(),
     new WebpackBar(),
