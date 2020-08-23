@@ -144,6 +144,14 @@ yarn add babel-plugin-component -D
 yarn add eslint-plugin-vue vue-eslint-parser -D
 ```
 
+```shell
+yarn add @types/jest jest -D
+```
+
+```shell
+yarn add node-fetch
+```
+
 ### e2e 测试
 
 使用 karma 集成浏览器测试？

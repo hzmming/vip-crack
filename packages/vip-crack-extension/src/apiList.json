@@ -24,14 +24,6 @@
       "name": "源二",
       "description": "效果一般",
       "api": {
-        "url": "https://app.tf.js.cn/jxds/api.php",
-        "param": "url"
-      }
-    },
-    {
-      "name": "源三",
-      "description": "效果一般",
-      "api": {
         "url": "http://v.idc126.net/v/api.php",
         "method": "POST",
         "param": "url",
