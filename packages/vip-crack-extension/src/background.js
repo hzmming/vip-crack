@@ -1,8 +1,14 @@
 import PluginUtil from "@/utils/PluginUtil";
-import { getHostname, convertSourceObj, hourToMillisecond } from "shared/util";
+import {
+  getHostname,
+  convertSourceObj,
+  hourToMillisecond,
+  getChromeVersion,
+} from "shared/util";
 import ApiUtil from "./utils/ApiUtil";
 import Config from "./utils/Config";
 
+const CHROME_VERSION = getChromeVersion();
 const dispatchObj = {};
 
 // popup.js 与 background.js 之前通信不通过chrome.runtime.sendMessage，使用 chrome.extension.getBackgroundPage()
@@ -50,7 +56,34 @@ dispatchObj["enableVipCrack"] = (request, sender) => {
       128: `/icons/128${status ? "" : "-gray"}.png`,
     },
   });
+  // NOTE 取消所有请求的cors限制，不知道会不会出事...
+  // TODO 先不启用
+  // allowAllOrigin(status);
 };
+
+// eslint-disable-next-line no-unused-vars
+function allowAllOrigin(status) {
+  if (status) {
+    chrome.webRequest.onBeforeSendHeaders.addListener(
+      allowAllOriginHandler,
+      { urls: ["<all_urls>"] },
+      // https://stackoverflow.com/a/59296870/11738392
+      // https://github.com/bewisse/modheader/blob/master/src/js/background.js
+      CHROME_VERSION.major >= 72
+        ? ["requestHeaders", "blocking", "extraHeaders"]
+        : ["requestHeaders", "blocking"]
+    );
+  } else {
+    chrome.webRequest.onBeforeSendHeaders.removeListener(allowAllOriginHandler);
+  }
+}
+
+function allowAllOriginHandler(details) {
+  const newHeader = { name: "Access-Control-Allow-Origin", value: "*" };
+  let responseHeaders = details.responseHeaders || [];
+  responseHeaders = responseHeaders.concat(newHeader);
+  return { responseHeaders };
+}
 
 /**
  * 发送notice消息

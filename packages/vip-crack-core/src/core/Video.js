@@ -1,5 +1,5 @@
 import { isHlsType } from "@/util";
-import Hls from "hls.js";
+const Hls = require("hls.js");
 
 class Video {
   /**

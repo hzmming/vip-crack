@@ -1,12 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "start": "yarn run start-core & yarn run start-extension",
-    "build": "yarn run build-core && yarn run build-extension",
-    "start-core": "yarn workspace vip-crack-core start",
-    "build-core": "yarn workspace vip-crack-core build",
-    "start-extension": "yarn workspace vip-crack-extension start",
-    "build-extension": "yarn workspace vip-crack-extension build"
+    "start": "yarn run start:core & yarn run start:extension",
+    "build": "yarn run build:core && yarn run build:extension",
+    "start:core": "yarn workspace vip-crack-core start",
+    "build:core": "yarn workspace vip-crack-core build",
+    "start:extension": "yarn workspace vip-crack-extension start",
+    "build:extension": "yarn workspace vip-crack-extension build"
   },
   "workspaces": [
     "packages/*"

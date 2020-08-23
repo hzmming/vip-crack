@@ -76,8 +76,8 @@ export function generateRequestParams(
  * 获取给定url的域名
  */
 export function getHostname(url) {
-  // 若不存在前缀，默认填充 http://
-  let prefix = "http://";
+  // 若不存在前缀，默认填充 https://
+  let prefix = "https://";
   if (/^https?:\/\//.test(url)) prefix = "";
   const { hostname } = new URL(prefix + url);
   return hostname;
@@ -102,4 +102,23 @@ export function convertSourceObj(sourceCode) {
  */
 export function hourToMillisecond(hour) {
   return hour * 60 * 60 * 1000;
+}
+
+/**
+ * 获取chrome版本信息
+ */
+export function getChromeVersion() {
+  let pieces = navigator.userAgent.match(
+    /Chrom(?:e|ium)\/([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/
+  );
+  if (pieces == null || pieces.length !== 5) {
+    return {};
+  }
+  pieces = pieces.map(piece => parseInt(piece, 10));
+  return {
+    major: pieces[1],
+    minor: pieces[2],
+    build: pieces[3],
+    patch: pieces[4],
+  };
 }

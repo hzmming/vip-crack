@@ -111,6 +111,7 @@ async function resolveSourceInfo(immediate) {
     );
 
   console.log("解析成功，类型为" + res.type);
+  console.log("地址为" + res.url);
 
   // 通知crack.js执行破解
   window.postMessage({ operate: "sourceInfo", immediate, ...res }, "*");
