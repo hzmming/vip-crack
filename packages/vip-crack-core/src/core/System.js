@@ -1,6 +1,6 @@
 import { hasOwnProperty, deferred, isSuit } from "shared/util";
 import { proxy } from "ajax-hook";
-import * as JSONPHook from "@/vendor/JSONPHook";
+import jsonpHook from "jsonp-hook";
 
 const LIFECYCLE_HOOKS = [
   "init",
@@ -107,7 +107,7 @@ class System {
         });
       } else if (i.type === "jsonp") {
         const matchList = [].concat(i.url);
-        JSONPHook(
+        jsonpHook(
           matchList,
           response => {
             i.handler(response, resolveNecessary);

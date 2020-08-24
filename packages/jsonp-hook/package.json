@@ -1,0 +1,49 @@
+{
+  "private": true,
+  "name": "jsonp-hook",
+  "description": "Intercepting browser's JSONP requests",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "jest test",
+    "pretest": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "main": "dist/jsonp-hook.cjs.js",
+  "module": "dist/jsonp-hook.esm.js",
+  "browser": "dist/jsonp-hook.umd.js",
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "@rollup/plugin-babel": "^5.1.0",
+    "@types/jest": "^26.0.7",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.5.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "jest": "^26.1.0",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "rollup": "^2.23.0",
+    "rollup-plugin-terser": "^6.1.0"
+  },
+  "keywords": [
+    "jsonp",
+    "jsonp hook"
+  ],
+  "author": "LoryHuang",
+  "license": "MIT",
+  "dependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,vue}": [
+      "eslint --fix"
+    ]
+  }
+}

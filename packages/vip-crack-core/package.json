@@ -44,6 +44,7 @@
   "dependencies": {
     "ajax-hook": "^2.0.3",
     "hls.js": "^0.14.8",
+    "jsonp-hook": "0.0.0",
     "shared": "0.0.0"
   }
 }

@@ -152,6 +152,14 @@ yarn add @types/jest jest -D
 yarn add node-fetch
 ```
 
+### yarn workspaces
+
+```shell
+# 依赖内部包，一定要指明版本号，不然 yarn 会去 npm 市场找包
+yarn workspace vip-crack-extension add vip-crack-core@0.0.0 shared@0.0.0
+yarn workspace vip-crack-core add shared@0.0.0 jsonp-hook@0.0.0
+```
+
 ### e2e 测试
 
 使用 karma 集成浏览器测试？
