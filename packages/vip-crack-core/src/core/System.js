@@ -1,4 +1,4 @@
-import { hasOwnProperty, deferred, isSuit } from "shared/util";
+import { hasOwnProperty, deferred, isSuit, log } from "shared/util";
 import { proxy } from "ajax-hook";
 import jsonpHook from "jsonp-hook";
 
@@ -74,6 +74,7 @@ class System {
     this.emit("beforeGetVideoDom");
     this.emit("getVideoDom", { resolve: this.resolveVideoDom.bind(this) });
     await this.ready;
+    log("准备就绪，即将更新地址并播放");
     this.video.updateAndPlay();
     // 重置是否需要破解标志，为不刷新页面切换集数准备
     this.necessaryDefer = deferred();
@@ -123,6 +124,7 @@ class System {
     return this.video.getDom();
   }
   resolveVideoDom(videoDom) {
+    log("video节点已找到");
     this.video.setDom(videoDom);
     this.video.blockPlay();
     this.emit("afterGetVideoDom");

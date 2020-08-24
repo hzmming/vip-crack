@@ -1,4 +1,5 @@
 import { isHlsType } from "@/util";
+import { log } from "shared/util";
 const Hls = require("hls.js");
 
 class Video {
@@ -24,6 +25,7 @@ class Video {
     this.sourceInfo = sourceInfo;
   }
   blockPlay() {
+    log("阻塞video.play()方法");
     const videoDom = this.dom;
     this.videoPlayFunc = videoDom.play.bind(videoDom);
     videoDom.play = () => {};
@@ -31,8 +33,10 @@ class Video {
   }
   update() {
     this.dom.src = this.sourceInfo.url;
+    log("已更新video地址");
   }
   recoverPlay() {
+    log("还原video.play()方法");
     if (!this.videoPlayFunc) return;
     this.dom.play = this.videoPlayFunc;
     this.dom.autoplay = true;
@@ -44,6 +48,7 @@ class Video {
       return this.playHlsVideo();
     }
     this.dom.play();
+    log("开始播放");
   }
   updateAndPlay() {
     this.update();
@@ -58,6 +63,7 @@ class Video {
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         // 播放
         this.dom.play();
+        log("开始播放");
       });
     } else {
       alert("不支持hls");

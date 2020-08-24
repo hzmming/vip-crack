@@ -49,6 +49,7 @@ dispatchObj.resolveSourceInfo = function () {
 dispatchObj.necessaryCrack = function (e) {
   if (e.data.necessaryCrack) {
     system.resolveNecessary();
+    log("需要破解");
   } else {
     video.recoverPlay();
     log("非vip视频，正常播放");
