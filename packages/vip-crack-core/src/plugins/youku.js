@@ -1,5 +1,5 @@
-import { getPrototype } from "shared/util";
-import { hookApply, wrapperInstaller } from "@/util";
+import { getPrototype, log } from "shared/util";
+import { hackAppendChild, hookApply, wrapperInstaller } from "@/util";
 
 const network = {
   injected: {
@@ -23,6 +23,29 @@ const network = {
 };
 
 const core = {
+  init() {
+    /**
+     * 有些电影播放有问题，出现canvas标签播放而不是video标签，使用canvas好像是h.265的标准，更省流量，
+     * 但人家原先正常播放用的是video，是被我改了什么参数，逻辑错乱才变成canvas的
+     *
+     * 错误示例：https://v.youku.com/v_show/id_XNDgwNjE1NjI3Mg==.html
+     * hack的核心逻辑在于链：youku-player._createVideo => this.args.useH265 => youku-player._adaptPlayerConfig => this.h265CanUse => this._h265Enable()
+     * _h265Enable() 里有好多判断逻辑，不管改哪个，重点是要让该方法返回“false”
+     * QUESTION 直接把这方法覆盖掉不知道会不会有问题
+     */
+    Object.defineProperty(window, "H265Player", {
+      get() {
+        return undefined;
+      },
+    });
+  },
+  getVideoDom(ctx, { resolve }) {
+    const done = hackAppendChild((...args) => {
+      if (args[0].nodeName !== "VIDEO") return;
+      resolve(args[0]);
+      done();
+    });
+  },
   afterGetVideoDom() {
     // 这是一个思路，但有些情况未覆盖到，所以弃用
     /* hookPromise({
@@ -55,12 +78,13 @@ const core = {
    * 手动补上。。。
    */
   afterPlay(ctx) {
-    // 不知道会不会出现节点不存在情况，不想管理了,try catch
+    // 电影不一定有下一集播放，而且电影和综艺的页面结构不一样。不想管理了,try catch
     try {
       fixClickPlayNext();
       fixEndPlayNext();
     } catch (e) {
-      console.error(e);
+      log("error，目前只做了动漫的下一集播放，电影、综艺暂不管");
+      // console.error(e);
     }
 
     function fixClickPlayNext() {
@@ -97,7 +121,7 @@ wrapperInstaller({
   nickname: "优酷视频",
   description: "去广告及以及不完全支持动漫",
   url: "v.youku.com/v_show",
-  version: "0.0.1",
+  version: "0.0.2",
   network,
   core,
 });

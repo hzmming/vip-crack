@@ -15,6 +15,22 @@ export function hackCreateElement(hook) {
   };
 }
 
+/**
+ * 拦截时机：挂载video节点
+ * 备注：无需提前对video节点做hack，只是想拿到节点而已
+ */
+export function hackAppendChild(hook) {
+  const appendChild = Node.prototype.appendChild;
+  Node.prototype.appendChild = function (...args) {
+    hook(...args);
+    // [native code]
+    return appendChild.call(this, ...args);
+  };
+  return () => {
+    Node.prototype.appendChild = appendChild;
+  };
+}
+
 export function hookPushState(hook) {
   const pushState = history.pushState.bind(history);
   history.pushState = (...args) => {
