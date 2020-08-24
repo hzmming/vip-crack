@@ -6,14 +6,15 @@
   "language": "en",
   // words - list of words to be always considered correct
   "words": [
-    "YOUKU",
-    "QQ",
-    "IQIYI",
-    "webpackbar",
-    "webm",
+    "devtool",
+    "eslintignore",
     "flac",
+    "IQIYI",
+    "QQ",
     "webextensions",
-    "devtool"
+    "webm",
+    "webpackbar",
+    "YOUKU"
   ],
   // flagWords - list of words to be always considered incorrect
   // This is useful for offensive words and common spelling errors.

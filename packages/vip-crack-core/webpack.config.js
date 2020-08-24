@@ -32,6 +32,14 @@ const options = {
   module: {
     rules: [
       {
+        enforce: "pre",
+        test: /\.(js|vue)$/,
+        loader: "eslint-loader",
+        // TODO 使用 yarn workspace 后，配置文件会往上找到根目录的 .eslintrc，但根目录的 .eslintignore 却不起作用，先用 include 缩小范围
+        include: [resolve("src")],
+        exclude: /node_modules/,
+      },
+      {
         test: /\.js$/,
         use: [
           {
@@ -41,7 +49,6 @@ const options = {
               rootMode: "upward",
             },
           },
-          "eslint-loader",
         ],
         exclude: /node_modules/,
       },

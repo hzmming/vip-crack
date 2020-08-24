@@ -1,4 +1,6 @@
+# TODO vscode的eslint插件会读取该配置文件，但eslint-loader却不会~~
 node_modules
 packages/vip-crack-extension/dist
 packages/vip-crack-extension/build
 packages/vip-crack-core/src/vendor
+packages/jsonp-hook/dist
