@@ -8,7 +8,7 @@
     "build:local": "cross-env NODE_ENV=production ENV=local node scripts/build.js",
     "test": "yarn test:api && yarn test:e2e",
     "test:api": "jest test/api --config=test/api/jest.config.js",
-    "test:e2e": "echo 'hello e2e'"
+    "test:e2e": "cross-env JEST_PUPPETEER_CONFIG=test/e2e/jest-puppeteer.config.js jest test/e2e --config=test/e2e/jest.config.js --runInBand"
   },
   "author": "LoryHuang <844155285@qq.com>",
   "license": "MIT",
@@ -39,9 +39,10 @@
     "html-webpack-plugin": "3.2.0",
     "husky": "^4.2.5",
     "jest": "^26.4.2",
+    "jest-puppeteer": "^4.4.0",
     "lint-staged": "^10.2.11",
     "postcss-loader": "^3.0.0",
-    "prettier": "^2.0.5",
+    "puppeteer": "^5.2.1",
     "raw-loader": "^4.0.1",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",

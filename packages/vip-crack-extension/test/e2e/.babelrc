@@ -1,0 +1,26 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": ["Chrome >= 60"]
+        }
+      }
+    ]
+  ]
+
+  /**
+   * 不知道为什么使用 @babel/plugin-transform-runtime 转译后，会报 _find is not defined.
+   * 作为测试用例来说，我只要解决 import/export 的问题，其它兼容性可不考虑
+   * TODO 应该和作用域有关系，解析后的代码可能一部分在node作用域，一部分在browser作用域
+   */
+  // "plugins": [
+  //   [
+  //     "@babel/plugin-transform-runtime",
+  //     {
+  //       "corejs": "3"
+  //     }
+  //   ]
+  // ]
+}
