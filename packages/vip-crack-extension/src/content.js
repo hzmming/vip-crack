@@ -1,13 +1,10 @@
 import PluginUtil from "@/utils/PluginUtil";
 import crossRequest from "@/utils/crossRequest";
 import notice from "@/utils/notice";
-import {
-  getActivePlugins,
-  deferred,
-  generateRequestParams,
-  log,
-} from "shared/util";
+import { getActivePlugins, deferred, generateRequestParams } from "shared/util";
+import { log, error } from "shared/message";
 import { getActiveApi } from "@/utils";
+import { API } from "@/constants";
 
 const dispatchBrowserObj = {};
 const listenBrowser = () => {
@@ -90,18 +87,9 @@ async function resolveSourceInfo(immediate) {
   const { url, options } = generateRequestParams(videoUrl, api);
   const res = await crossRequest(url, options);
 
-  if (!res) {
-    return necessaryDefer.then(() =>
-      notice.error("接口挂了，请重新刷新页面。若还是不行，请更换接口")
-    );
-  }
-
-  if (!res.success) {
-    return necessaryDefer.then(() =>
-      notice.error(
-        "解析失败，请重新刷新页面。若还是不行，请联系844155285hzm@gmail.com"
-      )
-    );
+  if (!res || !res.success) {
+    error(API.ERROR);
+    return necessaryDefer.then(() => notice.error(API.ERROR));
   }
 
   if (res.player === "url") {
