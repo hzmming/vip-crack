@@ -122,13 +122,3 @@ export function getChromeVersion() {
     patch: pieces[4],
   };
 }
-
-export function log(...msg) {
-  if (process.env.ENV === "local") {
-    console.log(
-      "%c vip-crack-extension",
-      "padding: 1px; border-radius: 0 3px 3px 0; color: #fff; background:#1475b2",
-      ...msg
-    );
-  }
-}

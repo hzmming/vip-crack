@@ -1,4 +1,5 @@
-import { getPrototype, log } from "shared/util";
+import { getPrototype } from "shared/util";
+import { log } from "shared/message";
 import { hackAppendChild, hookApply, wrapperInstaller } from "@/util";
 
 const network = {

@@ -1,4 +1,5 @@
-import { hasOwnProperty, deferred, isSuit, log } from "shared/util";
+import { hasOwnProperty, deferred, isSuit } from "shared/util";
+import { log } from "shared/message";
 import { proxy } from "ajax-hook";
 import jsonpHook from "jsonp-hook";
 

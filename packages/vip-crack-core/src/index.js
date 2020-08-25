@@ -1,6 +1,7 @@
 import System from "@/core/System";
 import Video from "@/core/Video";
-import { convertSourceObj, log } from "shared/util";
+import { convertSourceObj } from "shared/util";
+import { log } from "shared/message";
 
 const video = new Video();
 const system = new System(video);

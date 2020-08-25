@@ -1,5 +1,5 @@
 import { isHlsType } from "@/util";
-import { log } from "shared/util";
+import { log } from "shared/message";
 const Hls = require("hls.js");
 
 class Video {
