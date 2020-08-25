@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "yarn start:core & yarn start:extension",
+    "start": "concurrently \"yarn start:core\" \"yarn start:extension\"",
     "build": "yarn build:core && yarn build:extension",
     "build:local": "yarn build:core:local && yarn build:extension:local",
     "test": "yarn test:extension",
@@ -15,5 +15,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
 }
