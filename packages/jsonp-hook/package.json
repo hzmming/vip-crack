@@ -22,9 +22,7 @@
     "eslint": "^7.5.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.2.5",
     "jest": "^26.1.0",
-    "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
     "rollup": "^2.23.0",
     "rollup-plugin-terser": "^6.1.0"
@@ -35,15 +33,5 @@
   ],
   "author": "LoryHuang",
   "license": "MIT",
-  "dependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{js,vue}": [
-      "eslint --fix"
-    ]
-  }
+  "dependencies": {}
 }

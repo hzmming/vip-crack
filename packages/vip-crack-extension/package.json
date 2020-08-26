@@ -12,16 +12,6 @@
   },
   "author": "LoryHuang <844155285@qq.com>",
   "license": "MIT",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{js,vue}": [
-      "eslint --fix"
-    ]
-  },
   "devDependencies": {
     "@types/chrome": "^0.0.122",
     "@types/jest": "^26.0.10",
@@ -37,10 +27,8 @@
     "friendly-errors-webpack-plugin": "^1.7.0",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "3.2.0",
-    "husky": "^4.2.5",
     "jest": "^26.4.2",
     "jest-puppeteer": "^4.4.0",
-    "lint-staged": "^10.2.11",
     "postcss-loader": "^3.0.0",
     "puppeteer": "^5.2.1",
     "raw-loader": "^4.0.1",
