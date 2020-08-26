@@ -5,6 +5,8 @@
     "build": "yarn build:core && yarn build:extension",
     "build:local": "yarn build:core:local && yarn build:extension:local",
     "test": "yarn test:extension",
+    "cz": "git cz",
+    "log": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "start:core": "yarn workspace vip-crack-core start",
     "build:core": "yarn workspace vip-crack-core build",
     "build:core:local": "yarn workspace vip-crack-core build:local",
@@ -22,9 +24,14 @@
     "@babel/plugin-proposal-optional-chaining": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "@babel/runtime-corejs3": "^7.11.2",
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.2",
     "babel-eslint": "^10.1.0",
+    "commitizen": "^4.2.1",
     "concurrently": "^5.3.0",
+    "conventional-changelog-cli": "^2.1.0",
     "core-js": "^3.6.5",
+    "cz-conventional-changelog": "^3.2.1",
     "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
@@ -37,6 +44,11 @@
     "hooks": {
       "pre-commit": "lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
     }
   }
 }
