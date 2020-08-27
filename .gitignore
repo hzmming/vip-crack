@@ -1,4 +1,6 @@
 node_modules
+packages/vip-crack-core/dist
 packages/vip-crack-extension/build/*
-packages/vip-crack-extension/!build/apiList.json
+!packages/vip-crack-extension/build/apiList.json
+!packages/vip-crack-extension/build/plugins
 packages/vip-crack-extension/secrets.*.js
