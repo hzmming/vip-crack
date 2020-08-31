@@ -1,4 +1,4 @@
-import { isHlsType } from "@/util";
+import { isHlsUrl } from "@/util";
 import { log } from "shared/message";
 const Hls = require("hls.js");
 
@@ -44,7 +44,7 @@ class Video {
   }
   play() {
     // hls需特殊处理
-    if (isHlsType(this.sourceInfo.type)) {
+    if (isHlsUrl(this.sourceInfo.url)) {
       return this.playHlsVideo();
     }
     this.dom.play();

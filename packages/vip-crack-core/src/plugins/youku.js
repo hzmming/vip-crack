@@ -120,7 +120,7 @@ const core = {
 wrapperInstaller({
   name: "youku",
   nickname: "优酷视频",
-  description: "去广告及以及不完全支持动漫",
+  description: "",
   url: "v.youku.com/v_show",
   version: "0.0.2",
   network,

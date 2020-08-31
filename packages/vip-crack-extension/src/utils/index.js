@@ -17,7 +17,7 @@ export async function getActiveApi() {
         api = apiList[0];
         await Config.set("selectedSourceId", api.id);
       }
-      resolve(api.api);
+      resolve(api);
     })();
   });
 }

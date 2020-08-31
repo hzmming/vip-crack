@@ -72,6 +72,7 @@
               <el-tooltip
                 :key="item.name"
                 effect="dark"
+                :disabled="!item.description"
                 :content="item.description"
                 placement="top-start"
               >

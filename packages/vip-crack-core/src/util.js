@@ -55,6 +55,11 @@ export function isHlsType(type) {
   return ["hls", "m3u8"].includes(type);
 }
 
+export function isHlsUrl(url) {
+  const urlObj = new URL(url);
+  return [".m3u8"].find(i => urlObj.pathname.endsWith(i));
+}
+
 /**
  * TODO 同样有缺陷，只能调用一次
  * @param {*} hook

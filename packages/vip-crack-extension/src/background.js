@@ -42,6 +42,31 @@ const listen = () => {
 };
 listen();
 
+// 获取真实视频播放地址
+const isMatch = str => {
+  return [".m3u8", ".mp4"].find(i => str.endsWith(i));
+};
+chrome.webRequest.onBeforeRequest.addListener(
+  function (details) {
+    const { url, tabId } = details;
+    const urlObj = new URL(url);
+    // details.parentFrameId 用于判断该请求是否来源于iframe，区分正常视频网页请求
+    if (details.parentFrameId !== -1 && isMatch(urlObj.pathname)) {
+      console.log(url, details);
+      chrome.tabs.sendMessage(
+        tabId,
+        {
+          operate: "finalVideoUrl",
+          value: url,
+        },
+        function () {}
+      );
+    }
+  },
+  { urls: ["<all_urls>"] },
+  ["requestBody", "extraHeaders"]
+);
+
 /**
  * 点亮图标
  */

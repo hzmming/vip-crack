@@ -32,17 +32,11 @@ class ApiUtil {
         .then(res => res.json())
         .then(async ({ list }) => {
           // 添加唯一id
-          const temp = list.map((i, index) => {
-            return {
-              url: i,
-              id: uuid(),
-              name: `接口 ${index + 1}`,
-            };
-          });
+          list.forEach(i => (i.id = uuid()));
           const apiList = await ApiUtil.get();
           const manualList = apiList.filter(i => i.manual);
           // 保留用户手动添加的
-          const mergeList = manualList.concat(temp);
+          const mergeList = list.concat(manualList);
           await ApiUtil.override(mergeList);
           resolve(mergeList);
         });
@@ -53,8 +47,6 @@ class ApiUtil {
     // 用户手动添加的
     item.manual = true;
     const apiList = await ApiUtil.get();
-    // 允许用户不给名字，自动生成一个
-    item.name = item.name || `自定义 ${apiList.length + 1}`;
     apiList.push(item);
     return ApiUtil.override(apiList);
   }
