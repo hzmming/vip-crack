@@ -2,15 +2,18 @@
   "private": true,
   "scripts": {
     "start": "concurrently yarn:start:core yarn:start:extension",
+    "start:remote": "concurrently yarn:start:core:remote yarn:start:extension:remote",
     "build": "yarn build:core && yarn build:extension",
     "build:local": "yarn build:core:local && yarn build:extension:local",
     "test": "yarn test:extension",
     "cz": "git cz",
     "log": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "start:core": "yarn workspace vip-crack-core start",
+    "start:core:remote": "yarn workspace vip-crack-core start:remote",
     "build:core": "yarn workspace vip-crack-core build",
     "build:core:local": "yarn workspace vip-crack-core build:local",
     "start:extension": "yarn workspace vip-crack-extension start",
+    "start:extension:remote": "yarn workspace vip-crack-extension start:remote",
     "build:extension": "yarn workspace vip-crack-extension build",
     "build:extension:local": "yarn workspace vip-crack-extension build:local",
     "test:extension": "yarn workspace vip-crack-extension test"

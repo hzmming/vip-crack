@@ -4,6 +4,7 @@
   "version": "0.4.0",
   "scripts": {
     "start": "cross-env NODE_ENV=development ENV=local node scripts/webserver.js",
+    "start:remote": "cross-env NODE_ENV=development ENV=remote node scripts/webserver.js",
     "build": "cross-env NODE_ENV=production ENV=remote node scripts/build.js",
     "build:local": "cross-env NODE_ENV=production ENV=local node scripts/build.js",
     "test": "yarn test:api && yarn test:e2e",
