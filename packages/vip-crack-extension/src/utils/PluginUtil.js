@@ -87,7 +87,7 @@ function fetchAndSave(path) {
             process.env.ENV !== "local" &&
             !semver.gt(pluginObj.version, plugin.version)
           )
-            return;
+            return resolve(true);
         }
         // 保存
         const wrapper = {
