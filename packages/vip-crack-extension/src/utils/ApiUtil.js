@@ -9,12 +9,13 @@ class ApiUtil {
     // 导入应该是用普通的 input type="file" 就行
   }
   static async export() {
-    const apiList = await ApiUtil.get();
+    const apiList = await ApiUtil.getCustom();
     const result = JSON.stringify(apiList);
 
     // https://stackoverflow.com/questions/23160600/chrome-extension-local-storage-how-to-export
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
     const url = "data:," + result;
+    // 记得添加 downloads 权限
     chrome.downloads.download({
       url: url,
       filename: "apiList.txt",
@@ -48,14 +49,18 @@ class ApiUtil {
         });
     });
   }
-  static async create(item) {
-    item.id = uuid();
-    // 用户手动添加的
-    item.manual = true;
+  static async create(items) {
     const apiList = await ApiUtil.get();
-    // 允许用户不给名字，自动生成一个
-    item.name = item.name || `自定义 ${apiList.length + 1}`;
-    apiList.push(item);
+    const manualIndex = apiList.filter(i => i.manual).length;
+    const list = [].concat(items);
+    list.filter(i => {
+      i.id = uuid();
+      // 用户手动添加的
+      i.manual = true;
+      // 允许用户不给名字，自动生成一个
+      i.name = i.name || `自定义 ${manualIndex + 1}`;
+    });
+    apiList.unshift(...list);
     return ApiUtil.override(apiList);
   }
   static async update(item) {
@@ -67,9 +72,10 @@ class ApiUtil {
     }
     return Promise.reject("没有该对象");
   }
-  static async remove(item) {
+  static async remove(items) {
     let apiList = await ApiUtil.get();
-    apiList = apiList.filter(i => i.id !== item.id);
+    const list = [].concat(items);
+    apiList = apiList.filter(i => !list.find(item => item.id === i.id));
     return ApiUtil.override(apiList);
   }
   static get({ id } = {}) {
@@ -80,6 +86,10 @@ class ApiUtil {
         resolve(result);
       });
     });
+  }
+  static async getCustom() {
+    const list = await ApiUtil.get();
+    return list.filter(i => i.manual);
   }
   static async override(apiList) {
     return new Promise(resolve => {

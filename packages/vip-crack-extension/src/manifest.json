@@ -39,6 +39,7 @@
     "storage",
     "declarativeContent",
     "activeTab",
-    "tabs"
+    "tabs",
+    "downloads"
   ]
 }

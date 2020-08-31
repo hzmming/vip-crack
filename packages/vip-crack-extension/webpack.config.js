@@ -181,7 +181,7 @@ let options = {
   },
   plugins: [
     // cross-env已经将变量写至 node 中，可 webpack 却读不到，还要再衔接一次
-    new webpack.EnvironmentPlugin(["NODE_ENV", "ENV"]),
+    new webpack.EnvironmentPlugin(["NODE_ENV", "ENV", "npm_package_version"]),
     // clean the build folder
     new CleanWebpackPlugin(),
     new WebpackBar(),

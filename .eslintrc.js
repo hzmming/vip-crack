@@ -23,5 +23,8 @@ module.exports = {
     // 使用eslint-plugin-vue，自定义的parser要写到parserOptions里面，不然本身配置文件就会报错，module.export默认的画红线
     parser: "babel-eslint",
   },
-  rules: {},
+  rules: {
+    "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+  },
 };

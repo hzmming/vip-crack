@@ -1,0 +1,123 @@
+.options-box {
+  .header {
+    padding: 20px 0;
+    box-shadow: 0px 4px 8px -3px #11111129;
+
+    .header-content {
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 1000px;
+
+      .header-title {
+        font-size: 22px;
+        font-weight: 500;
+        color: #515151;
+      }
+
+      .rate {
+        width: 160px;
+        height: 40px;
+        padding: 0 15px;
+        background: #f2faf4;
+        border-radius: 3px;
+        font: 500 14px "Open Sans", Arial, sans-serif;
+        color: #778b7c;
+        text-decoration: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        > img {
+          width: 25px;
+          height: 25px;
+        }
+      }
+    }
+  }
+
+  .content-box {
+    position: relative;
+    margin: 50px auto;
+    width: 1000px;
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+
+      ::v-deep {
+        .el-input {
+          width: 320px;
+        }
+      }
+
+      .toolbar-box {
+        display: flex;
+        .upload-btn {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  .footer {
+    display: block;
+    margin: auto;
+    color: #999;
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 12px;
+    text-align: center;
+    padding: 50px;
+
+    .footer-content {
+      margin: auto;
+      padding: 15px 0;
+      display: flex;
+      align-items: center;
+      max-width: 1000px;
+      justify-content: space-between;
+      background-color: #efefef;
+
+      .content-logo {
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+
+        .ico--chrome,
+        .ico--firefox,
+        .logo--ico {
+          display: inline-block;
+          width: 32px;
+          height: 32px;
+          background-position: center;
+          background-repeat: no-repeat;
+          transition: background-image 0.3s ease;
+          background-color: transparent;
+          padding: 0 0 0 10px;
+          opacity: 0.8;
+        }
+        .logo--ico {
+          opacity: 1;
+          background-size: 32px;
+          background-image: url(~@/icons/icon.png);
+        }
+        .footer-content-info {
+          text-align: left;
+          padding: 0 5px;
+          .content-info-name {
+            color: #7b7575;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: Roboto, "Segoe UI", Tahoma, sans-serif;
+          }
+          .content-info-ver {
+            font-size: 10px;
+          }
+        }
+      }
+    }
+  }
+}
