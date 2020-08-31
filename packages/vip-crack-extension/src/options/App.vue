@@ -3,15 +3,22 @@
     <div class="header">
       <div class="header-content">
         <span class="header-title">Settings</span>
-        <a
-          id="rate-me"
-          class="rate"
-          title="Give me 5 stars!"
-          @click="jumpToStar"
-        >
-          <img src="@/assets/img/heart-red.png" />
-          <span>Rate this extension</span>
-        </a>
+        <div class="header-box">
+          <img
+            class="github"
+            src="@/assets/img/github.png"
+            @click="jumpToGithub"
+          />
+          <a
+            id="rate-me"
+            class="rate"
+            title="Give me 5 stars!"
+            @click="jumpToStar"
+          >
+            <img src="@/assets/img/heart-red.png" />
+            <span>Rate this extension</span>
+          </a>
+        </div>
       </div>
     </div>
 
@@ -238,6 +245,9 @@ export default {
           chrome.runtime.id +
           "/reviews",
       });
+    },
+    jumpToGithub() {
+      window.open("https://github.com/hzmming/vip-crack");
     },
   },
 };

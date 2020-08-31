@@ -16,6 +16,17 @@
         color: #515151;
       }
 
+      .header-box {
+        display: flex;
+        align-items: center;
+        .github {
+          width: 25px;
+          height: 25px;
+          margin-right: 10px;
+          cursor: pointer;
+        }
+      }
+
       .rate {
         width: 160px;
         height: 40px;
