@@ -1,7 +1,7 @@
 {
   "pluginsPath": [
-    "https://cdn.jsdelivr.net/gh/hzmming/vip-crack/packages/vip-crack-extension/build/plugins/qq.js",
-    "https://cdn.jsdelivr.net/gh/hzmming/vip-crack/packages/vip-crack-extension/build/plugins/youku.js"
+    "https://cdn.jsdelivr.net/gh/hzmming/vip-crack@develop/packages/vip-crack-extension/build/plugins/qq.js",
+    "https://cdn.jsdelivr.net/gh/hzmming/vip-crack@develop/packages/vip-crack-extension/build/plugins/youku.js"
   ],
-  "apiListPath": "https://cdn.jsdelivr.net/gh/hzmming/vip-crack/packages/vip-crack-extension/build/apiList.json"
+  "apiListPath": "https://cdn.jsdelivr.net/gh/hzmming/vip-crack@develop/packages/vip-crack-extension/build/apiList.json"
 }
