@@ -1,5 +1,8 @@
 node_modules
 packages/vip-crack-core/dist
+packages/vip-crack-extension/build.crx
+packages/vip-crack-extension/build.pem
+packages/vip-crack-extension/build.zip
 packages/vip-crack-extension/build/*
 !packages/vip-crack-extension/build/apiList.json
 !packages/vip-crack-extension/build/plugins
