@@ -210,10 +210,12 @@ export default {
     jumpToStar() {
       // chrome.runtime.id获取当前扩展的唯一id
       createNear({
-        url:
-          "https://chrome.google.com/webstore/detail/" +
-          chrome.runtime.id +
-          "/reviews",
+        url: navigator.userAgent.includes("Edg")
+          ? "https://microsoftedge.microsoft.com/addons/detail/" +
+            chrome.runtime.id
+          : "https://chrome.google.com/webstore/detail/" +
+            chrome.runtime.id +
+            "/reviews",
         closeWindow: true,
       });
     },
