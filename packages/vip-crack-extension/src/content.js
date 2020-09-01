@@ -43,10 +43,13 @@ let necessaryDefer = deferred();
 const main = () => {
   // 1. 获取插件
   PluginUtil.get().then(async plugins => {
+    log("所有插件", plugins.length);
     let activePlugins = getActivePlugins(plugins);
+    log("匹配插件", activePlugins.length);
     // 过滤未启用的插件
     const config = await Config.get();
     activePlugins = activePlugins.filter(i => config.enableObj[i.name]);
+    log("启用插件", activePlugins.length);
     if (activePlugins.length) {
       // 2. 点亮图标
       chrome.runtime.sendMessage({ operate: "enableVipCrack", value: true });

@@ -1,4 +1,5 @@
 import { v4 } from "uuid";
+import { log } from "./message";
 
 export function uuid() {
   return v4();
@@ -12,6 +13,7 @@ export function getActivePlugins(plugins) {
   const activePlugins = plugins.filter(plugin => {
     return isSuit(plugin);
   });
+  log(`匹配${activePlugins.length ? "成功" : "失败"}，网址：${location.href}`);
   return activePlugins;
 }
 

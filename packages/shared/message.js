@@ -4,7 +4,8 @@ const COLOR = {
   error: "#f56c6c",
 };
 const message = ({ type, msg }) => {
-  if (process.env.ENV !== "local") return;
+  if (process.env.ENV !== "local" && process.env.NODE_ENV !== "development")
+    return;
   console.log(
     "%c vip-crack-extension",
     `padding: 1px; border-radius: 0 3px 3px 0; color: #fff; background:${COLOR[type]}`,
