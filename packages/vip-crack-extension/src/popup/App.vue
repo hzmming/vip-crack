@@ -168,7 +168,7 @@ export default {
       this.pluginList = await PluginUtil.get();
       const url = await getLocation();
       const result = getActivePlugins(this.pluginList, url);
-      this.isAdapted = !!result;
+      this.isAdapted = result.length;
     },
     async getConfig() {
       const config = await Config.get();
