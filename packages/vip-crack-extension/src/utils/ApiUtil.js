@@ -29,6 +29,8 @@ class ApiUtil {
       if (process.env.ENV === "local") {
         apiListPath = chrome.extension.getURL(apiListPath.split("/").pop());
       }
+      // 添加时间戳避免缓存
+      apiListPath = apiListPath + `?${new Date().getTime()}`;
       fetch(apiListPath)
         .then(res => res.json())
         .then(async ({ list }) => {

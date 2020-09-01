@@ -75,6 +75,8 @@ class PluginUtil {
 }
 
 function fetchAndSave(path) {
+  // 添加时间戳避免缓存
+  path = path + `?${new Date().getTime()}`;
   return new Promise(resolve => {
     fetch(path)
       .then(res => res.text())
