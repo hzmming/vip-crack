@@ -124,9 +124,9 @@ wrapperInstaller({
   nickname: "腾讯视频",
   description: "",
   // 指定网站使用插件，强制只到一级域名：其实qq的全url是 v.qq.com/x/cover，但咱们只要写到qq这级即可
-  url: "qq.com/x/cover",
+  url: ["qq.com/x/cover", "qq.com/x/page"],
   // 版本号
-  version: "0.0.2",
+  version: "0.0.3",
   network,
   core,
 });
