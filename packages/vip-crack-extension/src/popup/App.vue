@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { hourToMillisecond } from "shared/util";
+import { hourToMillisecond, getActivePlugins } from "shared/util";
 import ApiUtil from "@/utils/ApiUtil";
 import PluginUtil from "@/utils/PluginUtil";
 import Config from "@/utils/Config";
@@ -167,9 +167,7 @@ export default {
     async getPluginList() {
       this.pluginList = await PluginUtil.get();
       const url = await getLocation();
-      const result = this.pluginList.find(plugin => {
-        return url.includes(plugin.url);
-      });
+      const result = getActivePlugins(this.pluginList, url);
       this.isAdapted = !!result;
     },
     async getConfig() {

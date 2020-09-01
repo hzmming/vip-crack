@@ -5,17 +5,17 @@ export function uuid() {
   return v4();
 }
 
-export const isSuit = pluginObj => {
+export const isSuit = (pluginObj, url = location.href) => {
   if (!pluginObj.url) return false;
   const pluginUrls = [].concat(pluginObj.url);
-  return pluginUrls.some(i => location.href.includes(i));
+  return pluginUrls.some(i => url.includes(i));
 };
 
-export function getActivePlugins(plugins) {
+export function getActivePlugins(plugins, url = location.href) {
   const activePlugins = plugins.filter(plugin => {
-    return isSuit(plugin);
+    return isSuit(plugin, url);
   });
-  log(`匹配${activePlugins.length ? "成功" : "失败"}，网址：${location.href}`);
+  log(`匹配${activePlugins.length ? "成功" : "失败"}，网址：${url}`);
   return activePlugins;
 }
 
