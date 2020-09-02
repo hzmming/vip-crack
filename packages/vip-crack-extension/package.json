@@ -1,7 +1,7 @@
 {
   "name": "vip-crack-extension",
   "description": "破解vip及去广告，目前仅支持腾讯视频和优酷视频",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "scripts": {
     "start": "cross-env NODE_ENV=development ENV=local node scripts/webserver.js",
     "start:remote": "cross-env NODE_ENV=development ENV=remote node scripts/webserver.js",
