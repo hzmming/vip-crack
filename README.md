@@ -8,7 +8,9 @@
 
 ## 安装
 
-占位，等我上传 chrome 和 edge 市场
+[Chrome 商店](https://chrome.google.com/webstore/detail/mmephpcmjcplemnjjjohocfgijndcnbn/reviews)
+
+[Edge 商店](https://microsoftedge.microsoft.com/addons/detail/aaeahljlflcjcbjjadhmcjhengibdonm)
 
 ## 使用
 
