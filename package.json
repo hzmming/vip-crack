@@ -53,5 +53,8 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "engines": {
+    "node": "^10.12.0 || >=12.0.0"
   }
 }
