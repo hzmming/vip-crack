@@ -167,7 +167,10 @@ export default {
     async getPluginList() {
       this.pluginList = await PluginUtil.get();
       const url = await getLocation();
-      const result = getActivePlugins(this.pluginList, url);
+      // 过滤掉query参数
+      const urlObj = new URL(url);
+      const finalUrl = urlObj.origin + urlObj.pathname;
+      const result = getActivePlugins(this.pluginList, finalUrl);
       this.isAdapted = result.length;
     },
     async getConfig() {
@@ -224,7 +227,16 @@ export default {
     },
     async selectSource() {
       await Config.set("selectedSourceId", this.selectedSourceId);
+      // 将选中Api也存储到 background.js 作用域下的localStorage，便于 background.js "同步"使用
+      this.saveSourceToBackgroundLocalStorage();
       reload();
+    },
+    saveSourceToBackgroundLocalStorage() {
+      const bgWin = chrome.extension.getBackgroundPage();
+      const selectedSource = this.apiList.find(
+        i => i.id === this.selectedSourceId
+      );
+      bgWin.updateStorageSelectedSource(selectedSource);
     },
   },
 };

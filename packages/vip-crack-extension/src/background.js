@@ -11,6 +11,28 @@ import Config from "./utils/Config";
 const CHROME_VERSION = getChromeVersion();
 const dispatchObj = {};
 
+// 当前选中Api
+let selectedApi = {};
+function getSelectedApi() {
+  // chrome.webRequest.onBeforeSendHeaders callback需要用到选中的Api，但callback不支持异步，且阻塞请求也不大好（因为拦截了其它的url，不想误伤）
+  // 所以改用 localStorage 作为桥梁
+  const selectedApiStr = localStorage.getItem("selectedSource");
+  console.log("selectedSource", selectedApiStr);
+  if (selectedApiStr) {
+    try {
+      selectedApi = JSON.parse(selectedApiStr);
+    } catch (e) {
+      //
+    }
+  }
+}
+getSelectedApi();
+
+window.updateStorageSelectedSource = function (sourceApi) {
+  localStorage.setItem("selectedSource", JSON.stringify(sourceApi));
+  getSelectedApi();
+};
+
 // popup.js 与 background.js 之前通信不通过chrome.runtime.sendMessage，使用 chrome.extension.getBackgroundPage()
 window.dispatchAction = params => {
   return new Promise(resolve => {
@@ -52,7 +74,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     const urlObj = new URL(url);
     // details.parentFrameId 用于判断该请求是否来源于iframe，区分正常视频网页请求
     if (details.parentFrameId !== -1 && isMatch(urlObj.pathname)) {
-      console.log(url, details);
+      console.warn("识别出视频地址", url, details);
       chrome.tabs.sendMessage(
         tabId,
         {
@@ -157,14 +179,19 @@ dispatchObj["sync"] = (request, sender, sendResponse) => {
  */
 const proxyNetwork = () => {
   PluginUtil.get().then(plugins => {
+    let allUrlList = [];
     plugins.forEach(item => {
       // 需要用到 plugin 里的 function，需自行调用 convertSourceObj
       const plugin = convertSourceObj(item.sourceCode);
+      // 发送请求前拦截
+      allUrlList = allUrlList.concat(plugin.url);
       const background = plugin?.network?.background;
       if (!background) return;
+      // FIXME plugin.url现在支持数组了...（虽然支持多个，但网站的域名往往是同一个，所以这里刚好没出错，先不管了）
       const hostname = getHostname(plugin.url);
       const bgList = [].concat(background);
       bgList.forEach(bg => {
+        // 请求完成拦截
         chrome.webRequest.onCompleted.addListener(
           details => {
             const { initiator, url, tabId } = details;
@@ -188,8 +215,52 @@ const proxyNetwork = () => {
         );
       });
     });
+    // 支持api伪装referrer
+    beforeSendHeadersHandler(allUrlList);
   });
 };
+
+function beforeSendHeadersHandler(urlList) {
+  if (!Array.isArray(urlList)) {
+    urlList = [].concat(urlList);
+  }
+  chrome.webRequest.onBeforeSendHeaders.addListener(
+    function (details) {
+      const { initiator, url } = details;
+      console.log("被拦截到的url", url);
+      // 只匹配插件支持的网站，避免误伤
+      const isDomainMatched = urlList.some(
+        i => initiator && initiator.includes(getHostname(i))
+      );
+      const isUrlMatched = urlList.some(i => url.includes(i));
+      const referrer = selectedApi.referrer;
+      // OPTIMIZE 好像是可以直接return空的，这样这个回调相当于不起作用。文档没有看到这方面内容，还是先老老实实地return吧
+      // 如果接口有需要指定referrer，则修改
+      if (isDomainMatched && referrer && isUrlMatched) {
+        console.log("符合条件被修改的url", url);
+        let gotRef = false;
+        for (let n in details.requestHeaders) {
+          gotRef = details.requestHeaders[n].name.toLowerCase() == "referer";
+          if (gotRef) {
+            details.requestHeaders[n].value = referrer;
+            break;
+          }
+        }
+        if (!gotRef) {
+          details.requestHeaders.push({ name: "Referer", value: referrer });
+        }
+      }
+      return { requestHeaders: details.requestHeaders };
+    },
+    // 没办法根据发送请求的domain过滤，也不支持query参数过滤，只能全部拦截...这也许就是所谓的扩展越多、浏览器越卡的原因吧~
+    {
+      urls: ["<all_urls>"],
+      // sub_frame表示embedded到document的frame。尽量减少影响
+      types: ["sub_frame"],
+    },
+    ["requestHeaders", "blocking", "extraHeaders"]
+  );
+}
 
 // UNKNOWN 只有解决完 proxyNetwork 的 bug，这里才能进行下去
 const clearProxyNetwork = () => {};
@@ -205,18 +276,26 @@ const sync = async () => {
   });
 
   // 保证同步后选中源依然有效
+  let selectedSource = null;
   const config = await Config.get();
   if (typeof config.selectedSourceId === "undefined") {
     // 如果是第一次，默认开启并使用第一个源
     config.selectedSourceId = apiList[0].id;
+    selectedSource = apiList[0];
     await Config.setObj(config);
   } else {
     const api = apiList.find(i => i.id === config.selectedSourceId);
     if (!api) {
+      selectedSource = apiList[0];
       // api 不存在说明使用的源被删掉了，默认选中第一个源
       await Config.set("selectedSourceId", apiList[0].id);
+    } else {
+      selectedSource = api;
     }
   }
+
+  // 将选中api存储到localStorage便于background.js自己同步使用
+  window.updateStorageSelectedSource(selectedSource);
 
   // 取消先前网络监听
   clearProxyNetwork();

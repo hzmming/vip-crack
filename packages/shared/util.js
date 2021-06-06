@@ -5,13 +5,19 @@ export function uuid() {
   return v4();
 }
 
-export const isSuit = (pluginObj, url = location.href) => {
+export const isSuit = (
+  pluginObj,
+  url = location.origin + location.pathname
+) => {
   if (!pluginObj.url) return false;
   const pluginUrls = [].concat(pluginObj.url);
   return pluginUrls.some(i => url.includes(i));
 };
 
-export function getActivePlugins(plugins, url = location.href) {
+export function getActivePlugins(
+  plugins,
+  url = location.origin + location.pathname
+) {
   const activePlugins = plugins.filter(plugin => {
     return isSuit(plugin, url);
   });

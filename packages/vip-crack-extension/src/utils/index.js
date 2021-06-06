@@ -2,6 +2,8 @@ import Config from "@/utils/Config";
 import ApiUtil from "@/utils/ApiUtil";
 
 /**
+ * 获取当前选中的Api
+ * FIXME 设计不合理的缺陷，日后改
  * 数据同步后，失效api被删除，就会出现选中的id找不到对应的api。
  * 默认取第一条，并更新当前选中源
  */

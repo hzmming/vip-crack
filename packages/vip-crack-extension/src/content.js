@@ -118,6 +118,8 @@ async function createParser() {
   iframe.style.height = "0px";
 
   const api = await getActiveApi();
+  log("当前所使用的api为", api.name);
+
   const videoUrl = location.origin + location.pathname; // 视频多带的参数有可能造成解析失败
   iframe.src = api.url + videoUrl;
 

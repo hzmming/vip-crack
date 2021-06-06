@@ -23,7 +23,7 @@ let noReferrerMeta = createNoReferrerMeta();
 
 /**
  * 禁用Referrer
- * QUESTION 不知道会不会影响
+ * 容易误伤，避免有些网站需要通过referrer作安全性校验
  */
 const disableReferrer = () => {
   document.head.appendChild(noReferrerMeta);

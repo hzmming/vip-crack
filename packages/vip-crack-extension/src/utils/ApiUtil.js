@@ -35,11 +35,12 @@ class ApiUtil {
         .then(res => res.json())
         .then(async ({ list }) => {
           // 添加唯一id
-          const temp = list.map((i, index) => {
+          const temp = list.map((item, index) => {
             return {
-              url: i,
+              url: item.url,
               id: uuid(),
-              name: `接口 ${index + 1}`,
+              name: item.name || `接口 ${index + 1}`,
+              referrer: item.referrer || "",
             };
           });
           const apiList = await ApiUtil.get();
