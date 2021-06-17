@@ -11,7 +11,9 @@ import Config from "./utils/Config";
 const CHROME_VERSION = getChromeVersion();
 const dispatchObj = {};
 
-// 当前选中Api
+/**
+ * 当前选中Api
+ */
 let selectedApi = {};
 function getSelectedApi() {
   // chrome.webRequest.onBeforeSendHeaders callback需要用到选中的Api，但callback不支持异步，且阻塞请求也不大好（因为拦截了其它的url，不想误伤）
@@ -72,6 +74,7 @@ chrome.webRequest.onBeforeRequest.addListener(
   function (details) {
     const { url, tabId } = details;
     const urlObj = new URL(url);
+    // 没法知道请求从哪个网站发出，也是不方便。没法做到只监听目标网站的
     // details.parentFrameId 用于判断该请求是否来源于iframe，区分正常视频网页请求
     if (details.parentFrameId !== -1 && isMatch(urlObj.pathname)) {
       console.warn("识别出视频地址", url, details);
