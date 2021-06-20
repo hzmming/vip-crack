@@ -45,6 +45,7 @@ const main = () => {
   PluginUtil.get().then(async plugins => {
     log("所有插件", plugins.length);
     let activePlugins = getActivePlugins(plugins);
+    if (!activePlugins.length) return;
     log("匹配插件", activePlugins.length);
     // 过滤未启用的插件
     const config = await Config.get();
@@ -80,7 +81,12 @@ dispatchBrowserObj["resolveSourceInfo"] = () => {
 };
 
 dispatchBrowserObj["necessaryCrack"] = e => {
-  e.data.necessaryCrack ? necessaryDefer.resolve() : necessaryDefer.reject();
+  if (e.data.necessaryCrack) {
+    necessaryDefer.resolve();
+  } else {
+    necessaryDefer.reject();
+    removeParser();
+  }
   necessaryDefer = deferred();
 };
 
