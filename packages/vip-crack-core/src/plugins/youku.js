@@ -2,6 +2,34 @@ import { getPrototype } from "shared/util";
 import { log } from "shared/message";
 import { hackAppendChild, hookApply, wrapperInstaller } from "@/util";
 
+const mockStream = [
+  {
+    audio_lang: "ja",
+    milliseconds_audio: 1442950,
+    milliseconds_video: 1442830,
+    segs: [],
+    stream_ext: {
+      hls_subtitle: "default",
+      fps: 30,
+      hls_size: 63806260,
+      hls_duration: 1442833,
+      hls_oss_bucket: 2,
+      startTime: "2.800000",
+      one_seg_flag: 0,
+      hls_logo: "none",
+      oss_bucket: 2,
+    },
+    size: 57462855,
+    subtitle_lang: "default",
+    media_type: "standard",
+    stream_type: "mp4sd",
+    width: 640,
+    logo: "none",
+    m3u8_url: "-1",
+    height: 360,
+  },
+];
+
 const network = {
   injected: {
     handler(res, resolveNecessary) {
@@ -15,6 +43,13 @@ const network = {
       delete res.data.data.trial;
       delete res.data.data.error;
       delete res.data.data.ad;
+
+      // 补漏
+      if (necessaryCrack) {
+        const stream = res.data.data.stream;
+        if (stream && !stream.length) res.data.data.stream = mockStream;
+      }
+
       // 一定要返回原参数，且多个参数使用数组返回
       return res;
     },
@@ -122,7 +157,7 @@ wrapperInstaller({
   nickname: "优酷视频",
   description: "",
   url: "v.youku.com/v_show",
-  version: "0.0.2",
+  version: "0.0.3",
   network,
   core,
 });
