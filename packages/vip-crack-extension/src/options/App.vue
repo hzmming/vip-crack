@@ -69,6 +69,11 @@
         <el-table-column prop="name" label="接口名称" width="280">
         </el-table-column>
         <el-table-column prop="url" label="接口地址"> </el-table-column>
+        <el-table-column prop="referrer" label="Referrer">
+          <template slot-scope="{ row }">
+            <span>{{ row.referrer || "默认" }}</span>
+          </template>
+        </el-table-column>
         <el-table-column fixed="right" label="操作" width="200">
           <template slot-scope="{ row, $index }">
             <el-button size="small" @click="update(row)">编 辑</el-button>
@@ -113,6 +118,9 @@
         <el-form-item label="接口地址" prop="url">
           <el-input v-model="form.url" placeholder="请输入接口地址"></el-input>
         </el-form-item>
+        <el-form-item label="Referrer" prop="referrer">
+          <el-input v-model="form.referrer" placeholder="可不填"></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogVisible = false">取 消</el-button>
@@ -140,6 +148,7 @@ export default {
       form: {
         name: "",
         url: "",
+        referrer: "",
       },
       rules: {
         url: [{ required: true, message: "请输入接口地址", trigger: "blur" }],
