@@ -74,7 +74,9 @@ chrome.webRequest.onBeforeRequest.addListener(
   function (details) {
     const { url, tabId } = details;
     const urlObj = new URL(url);
-    // 没法知道请求从哪个网站发出，也是不方便。没法做到只监听目标网站的
+    // 通过details.initiator可以知道请求从哪个domain发出，
+    // 但很多第三方接口都是一层层iframe嵌套，而initiator取的是iframe的域名，如果直接限制死校验最外层的domain会匹配不到
+    // 因此，还是先大面积匹配吧
     // details.parentFrameId 用于判断该请求是否来源于iframe，区分正常视频网页请求
     if (details.parentFrameId !== -1 && isMatch(urlObj.pathname)) {
       console.warn("识别出视频地址", url, details);
@@ -230,7 +232,6 @@ function beforeSendHeadersHandler(urlList) {
   chrome.webRequest.onBeforeSendHeaders.addListener(
     function (details) {
       const { initiator, url } = details;
-      console.log("被拦截到的url", url);
       // 只匹配插件支持的网站，避免误伤
       const isDomainMatched = urlList.some(
         i => initiator && initiator.includes(getHostname(i))
