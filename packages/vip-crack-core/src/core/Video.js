@@ -1,6 +1,10 @@
 import { isHlsUrl } from "@/util";
 import { log } from "shared/message";
+import { deferred } from "shared/util";
 const Hls = require("hls.js");
+
+// 保证recoverPlay在blockPlay之后
+let deferBlock = deferred();
 
 class Video {
   /**
@@ -30,12 +34,15 @@ class Video {
     this.videoPlayFunc = videoDom.play.bind(videoDom);
     videoDom.play = () => {};
     videoDom.autoplay = false;
+    deferBlock.resolve();
   }
   update() {
     this.dom.src = this.sourceInfo.url;
     log("已更新video地址");
   }
-  recoverPlay() {
+  async recoverPlay() {
+    await deferBlock;
+    deferBlock = deferred();
     log("还原video.play()方法");
     if (!this.videoPlayFunc) return;
     this.dom.play = this.videoPlayFunc;
