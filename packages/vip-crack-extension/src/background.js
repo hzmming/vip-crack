@@ -93,6 +93,36 @@ chrome.webRequest.onBeforeRequest.addListener(
   { urls: ["<all_urls>"] },
   ["requestBody", "extraHeaders"]
 );
+const m3u8ContentType = [
+  "application/vnd.apple.mpegurl",
+  "application/x-mpegurl",
+];
+const isMatchHeader = headers => {
+  return headers.some(
+    i => i.name === "content-type" && m3u8ContentType.includes(i.value)
+  );
+};
+// 有些m3u8地址不是.m3u8后缀，而是从接口获取。通过响应头判断
+chrome.webRequest.onHeadersReceived.addListener(
+  function (details) {
+    const { url, tabId, responseHeaders } = details;
+    // 获取m3u8地址
+    if (details.parentFrameId !== -1 && isMatchHeader(responseHeaders)) {
+      console.warn("get:识别出视频地址", url, details);
+      chrome.tabs.sendMessage(
+        tabId,
+        {
+          operate: "finalVideoUrl",
+          value: url,
+          type: "m3u8",
+        },
+        function () {}
+      );
+    }
+  },
+  { urls: ["<all_urls>"] },
+  ["blocking", "responseHeaders", "extraHeaders"]
+);
 
 /**
  * 点亮图标

@@ -94,7 +94,7 @@ dispatchBackgroundObj["playHistoryTime"] = () => {
   window.postMessage({ playHistoryTime: true }, "*");
 };
 
-dispatchBackgroundObj["finalVideoUrl"] = ({ value }) => {
+dispatchBackgroundObj["finalVideoUrl"] = ({ value, type }) => {
   // 有的接口莫名其妙返回两个可播放地址，只用第一个
   if (!iframe) return;
   log("解析成功，地址为" + value);
@@ -103,6 +103,7 @@ dispatchBackgroundObj["finalVideoUrl"] = ({ value }) => {
     {
       operate: "sourceInfo",
       url: value,
+      type,
       success: true,
       // OPTIMIZE immediate的存在有点问题，无非就是第一次要等所有条件达成，而第二次只需判断是否破解和是否解析成功
       immediate: changeEpisode,

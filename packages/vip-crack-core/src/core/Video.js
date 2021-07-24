@@ -51,7 +51,7 @@ class Video {
   }
   play() {
     // hls需特殊处理
-    if (isHlsUrl(this.sourceInfo.url)) {
+    if (this.sourceInfo.type === "m3u8" || isHlsUrl(this.sourceInfo.url)) {
       return this.playHlsVideo();
     }
     this.dom.play();
