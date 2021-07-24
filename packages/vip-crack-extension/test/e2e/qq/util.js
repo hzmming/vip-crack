@@ -34,7 +34,7 @@ async function selectVariety(page, epIndex) {
 async function selectAnime(page, epIndex) {
   await selectEpisode(page, {
     epIndex,
-    panelClass: '#video_scroll_wrap [data-tpl="episode"]',
+    panelClass: '#video_scroll_wrap [data-tpl="episode-un"]',
   });
 }
 

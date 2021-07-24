@@ -95,6 +95,15 @@ const core = {
       videoDom.currentTime = currentTime;
       videoDom.play();
     }
+    /**
+     * 莫名其妙地把右侧选集面板屏蔽了~~给它放出来
+     */
+    const panelClass = '#video_scroll_wrap [data-tpl="episode-un"]';
+    const panelDom = document.querySelector(panelClass);
+    panelDom &&
+      setTimeout(() => {
+        panelDom.classList.remove("none");
+      }, 500);
   },
   // deprecated
   playHistoryTime(ctx) {
@@ -126,7 +135,7 @@ wrapperInstaller({
   // 指定网站使用插件，强制只到一级域名：其实qq的全url是 v.qq.com/x/cover，但咱们只要写到qq这级即可
   url: ["qq.com/x/cover", "qq.com/x/page"],
   // 版本号
-  version: "0.0.3",
+  version: "0.0.4",
   network,
   core,
 });
