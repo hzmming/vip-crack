@@ -138,6 +138,7 @@ chrome.webRequest.onHeadersReceived.addListener(
       restHeaders.push({
         name: "Access-Control-Allow-Origin",
         // 不能使用"*"，不懂为什么，反正视频源会跨域
+        // 直接使用接口的域名domain即可
         value: top,
       });
       restHeaders.push({
