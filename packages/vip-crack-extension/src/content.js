@@ -116,6 +116,9 @@ async function createParser() {
   // 创建iframe
   iframe = document.createElement("iframe");
 
+  // 去除referrer，避开校验
+  iframe.referrerPolicy = "no-referrer";
+
   // 隐藏
   iframe.style.position = "fixed";
   iframe.style.top = "-9999px";
