@@ -119,6 +119,35 @@ chrome.webRequest.onHeadersReceived.addListener(
         function () {}
       );
     }
+    // 去除cors校验
+    if (details.parentFrameId === -1 && isMatchHeader(responseHeaders)) {
+      console.warn("set:识别出视频地址", url, details);
+      const top =
+        details.initiator ||
+        details.documentUrl ||
+        details.originUrl ||
+        details.url;
+      // 开放cors。如果有多个，则只保留一个，否则部分网页报错
+      // The ‘Access-Control-Allow-Origin‘ header contains multiple values‘x, *‘, but only one is allowed.
+      // （不过这个多个报错，好像根据网页的配置表现不一。有的网页就不会报错，具体没细了解）
+      const restHeaders = details.responseHeaders.filter(
+        e =>
+          e.name.toLowerCase() !== "access-control-allow-origin" &&
+          e.name.toLowerCase() !== "access-control-allow-methods"
+      );
+      restHeaders.push({
+        name: "Access-Control-Allow-Origin",
+        // 不能使用"*"，不懂为什么，反正视频源会跨域
+        value: top,
+      });
+      restHeaders.push({
+        name: "Access-Control-Allow-Methods",
+        value: "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+      });
+      return {
+        responseHeaders: restHeaders,
+      };
+    }
   },
   { urls: ["<all_urls>"] },
   ["blocking", "responseHeaders", "extraHeaders"]
